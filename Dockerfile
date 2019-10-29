@@ -1,5 +1,5 @@
 # parameters
-ARG REPO_NAME="<REPO_NAME_HERE>"
+ARG REPO_NAME="dt-duckiedrone"
 
 # ==================================================>
 # ==> Do not change this code
