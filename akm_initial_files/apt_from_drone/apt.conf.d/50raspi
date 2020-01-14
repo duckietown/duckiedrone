@@ -1,0 +1,2 @@
+# Never use pdiffs, current implementation is very slow on low-powered devices
+Acquire::PDiffs "0";
