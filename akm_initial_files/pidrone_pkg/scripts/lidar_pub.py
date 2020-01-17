@@ -125,8 +125,10 @@ def main():
         ir.heartbeat_pub.publish(Empty())
         ir.get_range()
         ir.publish_range(ir.distance)
-	ir_data.write("{} {}\n".format(datetime.utcnow().strftime("%M.%S.%f"), ir.distance))
-        r.sleep()
+	#ir_data.write("{} {}\n".format(datetime.utcnow().strftime("%M.%S.%f"), ir.distance))
+        #r.sleep()
+
+
 
 if __name__ == "__main__":
     main()

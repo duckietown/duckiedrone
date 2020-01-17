@@ -1,0 +1,8 @@
+country=us
+update_config=1
+ctrl_interface=/var/run/wpa_supplicant
+
+network={
+	ssid="RIPL"
+	psk=58ebd313fd32118d62677c49b848c2388ca6087848bce2c096bf28e517cd2499
+}

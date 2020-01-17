@@ -10,11 +10,6 @@ startup_message off
 #defscrollback 5000
 defscrollback 5000
 
-
-#set default shell to bash
-shell "/bin/bash"
-
-
 escape ``
 
 # this hard status was stolen from the net, all credit goes to its originator
@@ -75,6 +70,7 @@ screen -t "IR"
 stuff "source setup.sh\n"
 stuff "cd $(rospack find pidrone_pkg)/scripts/\n"
 stuff "python infrared_pub.py\n"
+#stuff "python lidar_pub.py\n"
 
 screen -t "rosbridge"
 stuff "source setup.sh\n"
