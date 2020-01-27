@@ -1,5 +1,0 @@
-country=us
-update_config=1
-ctrl_interface=/var/run/wpa_supplicant
-
-<network>

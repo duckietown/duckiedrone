@@ -1,8 +1,10 @@
+#!/usr/bin/env python
+
 import sys
 import os
 import rospy
 import signal
-import Adafruit_ADS1x15
+import time
 from std_msgs.msg import Empty
 from sensor_msgs.msg import Range
 
@@ -15,9 +17,8 @@ except RuntimeError:
       because you need superuser privileges.  You can \
       achieve this by using 'sudo' to run your script")
 
-sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
+# sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
 import VL53L1X
-import time
 import numpy as np
 
 GPIO.setmode(GPIO.BCM)
@@ -58,7 +59,6 @@ class IR(object):
     """
 
     def __init__(self):
-        self.adc = Adafruit_ADS1x15.ADS1115()
         self.GAIN = 1
         self.distance = 0
         # values used to define the slope and intercept of
@@ -69,12 +69,12 @@ class IR(object):
     def get_range(self):
         """Read the data from the LIDARs and update the distance and
         smoothed_distance values."""
-	d1 = tof1.get_distance()
-	d2 = tof2.get_distance()
-	d3 = tof3.get_distance()
-	d4 = tof4.get_distance()
-	median = np.median(np.array([d1,d2,d3,d4]), axis=0)
-	self.distance = median/1000.0
+        d1 = tof1.get_distance()
+        d2 = tof2.get_distance()
+        d3 = tof3.get_distance()
+        d4 = tof4.get_distance()
+        median = np.median(np.array([d1,d2,d3,d4]), axis=0)
+        self.distance = median/1000.0
         #voltage = self.adc.read_adc(0, self.GAIN)
         #if voltage <= 0:
         #    voltage = 1
@@ -124,7 +124,9 @@ def main():
     while not rospy.is_shutdown():
         ir.heartbeat_pub.publish(Empty())
         ir.get_range()
+        print ir.distance
         ir.publish_range(ir.distance)
+        # time.sleep(1 / 30.0)
 	#ir_data.write("{} {}\n".format(datetime.utcnow().strftime("%M.%S.%f"), ir.distance))
         #r.sleep()
 

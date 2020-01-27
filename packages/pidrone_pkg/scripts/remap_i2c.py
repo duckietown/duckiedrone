@@ -10,7 +10,6 @@ sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
 
 import VL53L1X
 import time
-from datetime import datetime
 
 GPIO.setmode(GPIO.BCM)
 mode = GPIO.getmode()
@@ -73,18 +72,3 @@ tof4.open()
 print("Python: Initialized")
 
 print("Python: Opened")
-
-exit()
-#tof2.start_ranging(1)
-try:
-    while True:
-        tof1.start_ranging(1)
-        distance_mm = tof1.get_distance()
-        print("1 Time: {} Distance: {}mm".format(datetime.utcnow().strftime("%S.%f"), distance_mm))
-        tof1.stop_ranging()
-        distance_mm = tof2.get_distance()
-        print("2 Time: {} Distance: {}mm".format(datetime.utcnow().strftime("%S.%f"), distance_mm))
-        time.sleep(0.001)
-except KeyboardInterrupt:
-    tof1.stop_ranging()
-    tof2.stop_ranging()
