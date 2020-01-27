@@ -1,0 +1,3 @@
+Package: *
+Pin: release o=LP-PPA-ubuntu-pi-flavour-makers
+Pin-Priority: 990
