@@ -68,11 +68,11 @@ class PID:
 
     def __init__(self,
 
-                 roll=PIDaxis(5.0, 0.0, 0.0, control_range=(1400, 1600), midpoint=1500, i_range=(-100, 100)),
-                 roll_low=PIDaxis(4.0, 0.5, 0.0, control_range=(1400, 1600), midpoint=1500, i_range=(-150, 150)),
+                 roll=PIDaxis(2.0, 1.0, 0.0, control_range=(1400, 1600), midpoint=1500, i_range=(-100, 100)),
+                 roll_low=PIDaxis(0.0, 0.5, 0.0, control_range=(1400, 1600), midpoint=1500, i_range=(-150, 150)),
 
-                 pitch=PIDaxis(5.0, 0.0, 0.0, control_range=(1400, 1600), midpoint=1500, i_range=(-100, 100)),
-                 pitch_low=PIDaxis(4.0, 0.5, 0.0, control_range=(1400, 1600), midpoint=1500, i_range=(-150, 150)),
+                 pitch=PIDaxis(2.0, 1.0, 0.0, control_range=(1400, 1600), midpoint=1500, i_range=(-100, 100)),
+                 pitch_low=PIDaxis(0.0, 0.5, 0.0, control_range=(1400, 1600), midpoint=1500, i_range=(-150, 150)),
 
                  yaw=PIDaxis(0.0, 0.0, 0.0),
 
@@ -105,9 +105,9 @@ class PID:
         self._t = None
 
         # Tuning values specific to each drone
-        self.roll_low.init_i = -0.32
-        self.pitch_low.init_i = -3.8
-        self.throttle_low.init_i = 180
+        self.roll_low.init_i = 0.0
+        self.pitch_low.init_i = 0.0
+        self.throttle_low.init_i = 100
         self.reset()
 
     def reset(self):

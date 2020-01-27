@@ -1,0 +1,88 @@
+#
+# various settings suggested by other users
+#
+# derived from the Paradox pair programming screenrc, UChicago 2010
+#   ~ yes, we are all total newbs ~
+#
+
+startup_message off
+
+#defscrollback 5000
+defscrollback 5000
+
+escape ``
+
+# this hard status was stolen from the net, all credit goes to its originator
+hardstatus             alwayslastline
+#hardstatus string '%{= mK}%-Lw%{= KW}%50>%n%f* %t%{= mK}%+Lw%< %{= kG}%-=%D %d %M %Y %c:%s%{-}'
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m %{W}%c %{g}]'
+
+# A hint for using multiuser mode:  make sure that both parties have identically
+# sized terminals, otherwise there could be graphical mismatches and undrawn text
+# for one party :(  .
+
+# turn multiuser mode on so others can connect.
+multiuser on
+
+# add the specified user to this screen session so that they can connect.
+# the initiating user is allowed automatically, but add both so either can
+# run this script without modification.
+
+#acladd gen
+acladd oberlin
+acladd stefie10
+
+# Starts a new screen with title " MAKE"
+# this is basically equivalent to pressing the following from within screen:
+# `c (starts a new window)
+# `:title " MAKE" (sets the title to " MAKE")
+#screen -t " MAKE"
+
+#stuff "unset STY\n"
+#stuff "screen\n"
+
+screen -t "rcore"
+stuff "source setup.sh\n"
+stuff "roscore\n"
+stuff ""
+
+screen -t "FC"
+stuff "source setup.sh\n"
+stuff "cd $(rospack find pidrone_pkg)/scripts/\n"
+stuff "python flight_controller_node.py" # We require this be started manually
+
+screen -t "PID"
+stuff "source setup.sh\n"
+stuff "cd $(rospack find pidrone_pkg)/scripts/\n"
+stuff "python pid_controller.py\n"
+
+screen -t "SE"
+stuff "source setup.sh\n"
+stuff "cd $(rospack find pidrone_pkg)/scripts/\n"
+stuff "python state_estimator.py -p ukf7d\n"
+
+screen -t "Vision"
+stuff "source setup.sh\n"
+stuff "cd $(rospack find pidrone_pkg)/scripts\n"
+stuff "python vision_flow_and_phase.py\n"
+
+screen -t "IR"
+stuff "source setup.sh\n"
+stuff "cd $(rospack find pidrone_pkg)/scripts/\n"
+stuff "python infrared_pub.py\n"
+
+screen -t "rosbridge"
+stuff "source setup.sh\n"
+stuff "sleep 10s && roslaunch rosbridge_server rosbridge_websocket.launch\n"
+
+screen -t "web_vid_serv"
+stuff "source setup.sh\n"
+stuff "rosrun web_video_server web_video_server"
+
+screen -t "free1"
+stuff "source setup.sh\n"
+stuff "cd $(rospack find pidrone_pkg)/scripts/\n"
+
+screen -t "free2"
+stuff "source setup.sh\n"
+stuff "cd $(rospack find pidrone_pkg)/scripts/\n"
