@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   std_msgs
   message_generation
+  cv_bridge
 )
 
 ## System dependencies are found with CMake's conventions
@@ -47,9 +48,6 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  RC.msg
-  Mode.msg
-  Battery.msg
   State.msg
 )
 
@@ -72,7 +70,8 @@ generate_messages(
   DEPENDENCIES
   geometry_msgs
   std_msgs
-  geometry_msgs
+  sensor_msgs
+  #cv_bridge
 )
 catkin_package(CATKIN_DEPENDS message_runtime)
 

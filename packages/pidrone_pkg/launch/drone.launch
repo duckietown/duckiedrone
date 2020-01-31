@@ -1,5 +1,4 @@
 <launch>
-  <node pkg="pidrone_pkg" type="flight_controller_node.py" name="flight_controller_node" output="screen"></node>
+  <node pkg="pidrone_pkg" type="vision_flow_and_phase.py" name="vision_flow_and_phase" output="screen"></node>
 
-  <node pkg="pidrone_pkg" type="lidar_pub.py" name="lidar_pub" output="screen"></node>
 </launch>

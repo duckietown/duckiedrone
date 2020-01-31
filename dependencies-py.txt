@@ -1,6 +1,6 @@
 # LIST YOUR PYTHON PACKAGES HERE
-smbus2
-vl53l1x
-pyyaml
+#smbus2
+#vl53l1x
+#pyyaml
 numpy
-rpi.gpio
+#rpi.gpio
