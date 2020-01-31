@@ -49,10 +49,8 @@ add_message_files(
   FILES
   RC.msg
   Mode.msg
-  Battery.msg
   State.msg
   StateGroundTruth.msg
-  UkfStats.msg
 
 )
 
@@ -75,7 +73,6 @@ generate_messages(
   DEPENDENCIES
   geometry_msgs
   std_msgs
-  geometry_msgs
 )
 catkin_package(CATKIN_DEPENDS message_runtime)
 

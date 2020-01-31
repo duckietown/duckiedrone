@@ -1,13 +1,10 @@
 <launch>
-  <node pkg="pidrone_pkg" type="flight_controller_node.py" name="flight_controller_node"></node>
 
   <node pkg="pidrone_pkg" type="pid_controller.py" name="pid_controller"></node>
 
-  <node pkg="pidrone_pkg" type="state_estimator.py" name="state_estimator"></node>
+  <node pkg="pidrone_pkg" type="state_estimator.py" args="-p ukf7d" name="state_estimator"></node>
 
-<!--   <node pkg="pidrone_pkg" type="vision_flow_and_phase.py" name="vision_flow_and_phase"></node> -->
-
-  <node pkg="pidrone_pkg" type="lidar_pub.py" name="lidar_pub"></node>
+  <node pkg="web_video_server" type="web_video_server" name="web_video_server"></node>  
 
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"></include>
 </launch>
