@@ -1,5 +1,5 @@
 # parameters
-ARG REPO_NAME="cleandrone"
+ARG REPO_NAME="cleandrone-non-hardware"
 
 # ==================================================>
 # ==> Do not change this code
