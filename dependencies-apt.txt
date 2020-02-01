@@ -1,5 +1,8 @@
 # LIST YOUR APT PACKAGES HERE
 
+#for webserver
+ros-kinetic-rosbridge-server
+
 #For pid
 python-serial
 

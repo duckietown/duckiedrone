@@ -8,15 +8,13 @@ dt_launchfile_init
 # YOUR CODE BELOW THIS LINE
 # ----------------------------------------------------------------------------
 
-
-# NOTE: Use the variable CODE_DIR to know the absolute path to your code
+#NOTE: Use the variable CODE_DIR to know the absolute path to your code
 # NOTE: Use `dt_exec COMMAND` to run the main process (blocking process)
 
 
 # launching app
 dt_exec roslaunch pidrone_pkg drone.launch
-
-
+dt_exec roslaunch pidrone_pkg rosbridge_websocket.launch
 # ----------------------------------------------------------------------------
 # YOUR CODE ABOVE THIS LINE
 

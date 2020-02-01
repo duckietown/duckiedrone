@@ -87,5 +87,4 @@ LABEL org.duckietown.label.code.version.major="${MAJOR}"
 LABEL org.duckietown.label.base.image="${BASE_IMAGE}:${BASE_TAG}"
 # <== Do not change this code
 # <==================================================
-
 MAINTAINER Arthur MacKeith <amackeith@uchicago.edu>
