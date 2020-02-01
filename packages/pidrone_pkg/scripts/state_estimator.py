@@ -2,7 +2,8 @@
 
 import argparse
 import rospy
-from pidrone_pkg.msg import State, StateGroundTruth, UkfStats
+from pidrone_pkg.msg import State, StateGroundTruth
+from pidrone_pkg.msg import UkfStats
 import subprocess
 import os
 

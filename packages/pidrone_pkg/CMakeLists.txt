@@ -51,7 +51,7 @@ add_message_files(
   Mode.msg
   State.msg
   StateGroundTruth.msg
-
+  UkfStats.msg
 )
 
 ## Generate services in the 'srv' folder
