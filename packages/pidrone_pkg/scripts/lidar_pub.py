@@ -124,7 +124,7 @@ def main():
     while not rospy.is_shutdown():
         ir.heartbeat_pub.publish(Empty())
         ir.get_range()
-        print ir.distance
+        #print ir.distance
         ir.publish_range(ir.distance)
         # time.sleep(1 / 30.0)
 	#ir_data.write("{} {}\n".format(datetime.utcnow().strftime("%M.%S.%f"), ir.distance))
