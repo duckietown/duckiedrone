@@ -306,7 +306,7 @@ def main():
     
     parser.add_argument('--primary', '-p',
                         choices=arg_choices,
-                        default='ema',
+                        default='ukf7d',
                         help='Select the primary state estimation method')
     parser.add_argument('--others', '-o',
                         choices=arg_choices,
@@ -344,7 +344,7 @@ def main():
                         help=('Frequency at which to run the predict-update '
                               'loop of the UKF (default: 30)'))
                               
-    args = parser.parse_args()
+    args = parser.parse_args(rospy.myargv()[1:])
     
     try:
         se = StateEstimator(primary=args.primary,
