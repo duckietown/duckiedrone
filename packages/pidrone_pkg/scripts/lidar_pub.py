@@ -41,15 +41,19 @@ tof2.start_ranging(1)
 tof3.start_ranging(1)
 tof4.start_ranging(1)
 
-
-
+#this is to increase frequency
+budget = 1
+inter = 1
+tof1.set_timing(budget, inter)
+tof2.set_timing(budget, inter)
+tof3.set_timing(budget, inter)
+tof4.set_timing(budget, inter)
 
 
 
 ### end of setup block
 
 from datetime import datetime
-ir_data = open("time_series_lidar{}.txt".format(datetime.utcnow().strftime("%H.%M")), 'w')
 
 class IR(object):
     """A class that reads, analyzes, and publishes IR sensor data.
@@ -124,11 +128,7 @@ def main():
     while not rospy.is_shutdown():
         ir.heartbeat_pub.publish(Empty())
         ir.get_range()
-        #print ir.distance
         ir.publish_range(ir.distance)
-        # time.sleep(1 / 30.0)
-	#ir_data.write("{} {}\n".format(datetime.utcnow().strftime("%M.%S.%f"), ir.distance))
-        #r.sleep()
 
 
 
