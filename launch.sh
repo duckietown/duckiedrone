@@ -18,6 +18,13 @@ if [ "${DEBUG}" = "1" ]; then echo "Remapping I2C..."; fi
 python2 $CODE_DIR/packages/pidrone_pkg/scripts/remap_i2c.py
 if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 
+
+#Calibrate Accelerometer on startup (drone must be level)
+if [ "${DEBUG}" = "1" ]; then echo "Calibrating Accelerometer..."; fi
+python2 $CODE_DIR/packages/pidrone_pkg/scripts/calibrateAcc.py
+if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
+
+
 # launching app
 dt_exec roslaunch pidrone_pkg drone.launch
 
