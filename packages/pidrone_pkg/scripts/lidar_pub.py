@@ -62,7 +62,8 @@ except:
 
 
 ### end of setup block
-
+tofs = (tof1, tof2, tof3, tof4)
+tof_index = 0
 from datetime import datetime
 
 class IR(object):
@@ -83,12 +84,16 @@ class IR(object):
     def get_range(self):
         """Read the data from the LIDARs and update the distance and
         smoothed_distance values."""
-        d1 = tof1.get_distance()
-        d2 = tof2.get_distance()
-        d3 = tof3.get_distance()
-        d4 = tof4.get_distance()
-        median = np.median(np.array([d1,d2,d3,d4]), axis=0)
-        self.distance = median/1000.0
+        #d1 = tof1.get_distance()
+        #d2 = tof2.get_distance()
+        #d3 = tof3.get_distance()
+        #d4 = tof4.get_distance()
+        #median = np.median(np.array([d1,d2,d3,d4]), axis=0)
+        #self.distance = median/1000.0
+        global tof_index
+        self.distance = tofs[tof_index].get_distance() / 1000.0
+        tof_index = tof_index + 1
+        tof_index = tof_index % 4
         #voltage = self.adc.read_adc(0, self.GAIN)
         #if voltage <= 0:
         #    voltage = 1
