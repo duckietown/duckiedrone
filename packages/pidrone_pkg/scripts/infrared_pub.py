@@ -1,78 +1,22 @@
-#!/usr/bin/env python
-
 import sys
 import os
 import rospy
 import signal
-import time
+import Adafruit_ADS1x15
 from std_msgs.msg import Empty
 from sensor_msgs.msg import Range
 
-
-### this block is to set up the lidar range finders
-try:
-    import RPi.GPIO as GPIO
-except RuntimeError:
-    print("Error importing RPi.GPIO!  This is probably \
-      because you need superuser privileges.  You can \
-      achieve this by using 'sudo' to run your script")
-
-# sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
-import VL53L1X
-import numpy as np
-
-
-### the try/except block is to allow compatibility
-### with the drones that use IR sensors
-### it is kind of grubby but ideally it will make
-### development smoother
-try:
-    GPIO.setmode(GPIO.BCM)
-    mode = GPIO.getmode()
-    #then innit the first one
-    tof1 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x30)
-    tof1.open()
-
-    tof2 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x31)
-    tof2.open()
-
-    tof3 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x32)
-    tof3.open()
-
-    tof4 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x33)
-    tof4.open()
-
-    tof1.start_ranging(1)
-    tof2.start_ranging(1)
-    tof3.start_ranging(1)
-    tof4.start_ranging(1)
-
-    #this is to increase frequency
-    budget = 1
-    inter = 1
-    tof1.set_timing(budget, inter)
-    tof2.set_timing(budget, inter)
-    tof3.set_timing(budget, inter)
-    tof4.set_timing(budget, inter)
-except:
-    print "Failed to start LIDAR sensors: Trying Infrared"
-    os.system("python infrared_pub.py")
-    exit()
-
-
-
-### end of setup block
-
 from datetime import datetime
+ir_data = open("time_series_ir{}.txt".format(datetime.utcnow().strftime("%H.%M")), 'w')
 
 class IR(object):
     """A class that reads, analyzes, and publishes IR sensor data.
-
     Publisher:
     /pidrone/infrared
     """
 
     def __init__(self):
+        self.adc = Adafruit_ADS1x15.ADS1115()
         self.GAIN = 1
         self.distance = 0
         # values used to define the slope and intercept of
@@ -81,19 +25,13 @@ class IR(object):
         self.b = -8.3 + 7.5
 
     def get_range(self):
-        """Read the data from the LIDARs and update the distance and
+        """Read the data from the adc and update the distance and
         smoothed_distance values."""
-        d1 = tof1.get_distance()
-        d2 = tof2.get_distance()
-        d3 = tof3.get_distance()
-        d4 = tof4.get_distance()
-        median = np.median(np.array([d1,d2,d3,d4]), axis=0)
-        self.distance = median/1000.0
-        #voltage = self.adc.read_adc(0, self.GAIN)
-        #if voltage <= 0:
-        #    voltage = 1
-        #    print "ERROR: BAD VOLTAGE!!!"
-        #self.distance = ((1.0 / voltage) * self.m + self.b) / 100.0 # 100 is for cm -> m
+        voltage = self.adc.read_adc(0, self.GAIN)
+        if voltage <= 0:
+            voltage = 1
+            print "ERROR: BAD VOLTAGE!!!"
+        self.distance = ((1.0 / voltage) * self.m + self.b) / 100.0 # 100 is for cm -> m
 
     def publish_range(self, range):
         """Create and publish the Range message to publisher."""
@@ -139,8 +77,9 @@ def main():
         ir.heartbeat_pub.publish(Empty())
         ir.get_range()
         ir.publish_range(ir.distance)
-
-
+	ir_data.write("{} {}\n".format(datetime.utcnow().strftime("%M.%S.%f"), ir.distance))
+        r.sleep()
 
 if __name__ == "__main__":
     main()
+
