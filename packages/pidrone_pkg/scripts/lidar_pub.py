@@ -91,20 +91,16 @@ class IR(object):
         #median = np.median(np.array([d1,d2,d3,d4]), axis=0)
         #self.distance = median/1000.0
         global tof_index
+        """need to convert from mm to meters"""
         self.distance = tofs[tof_index].get_distance() / 1000.0
         tof_index = tof_index + 1
         tof_index = tof_index % 4
-        #voltage = self.adc.read_adc(0, self.GAIN)
-        #if voltage <= 0:
-        #    voltage = 1
-        #    print "ERROR: BAD VOLTAGE!!!"
-        #self.distance = ((1.0 / voltage) * self.m + self.b) / 100.0 # 100 is for cm -> m
 
     def publish_range(self, range):
         """Create and publish the Range message to publisher."""
         msg = Range()
-        msg.max_range = 0.8
-        msg.min_range = 0
+        msg.max_range = 3.0 #different max for lidar version
+        msg.min_range = 0   #range in meters
         msg.range = range
         msg.header.frame_id = "base"
         msg.header.stamp = rospy.Time.now()

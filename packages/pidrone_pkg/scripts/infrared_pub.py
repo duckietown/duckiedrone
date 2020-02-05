@@ -7,7 +7,6 @@ from std_msgs.msg import Empty
 from sensor_msgs.msg import Range
 
 from datetime import datetime
-ir_data = open("time_series_ir{}.txt".format(datetime.utcnow().strftime("%H.%M")), 'w')
 
 class IR(object):
     """A class that reads, analyzes, and publishes IR sensor data.
@@ -77,7 +76,6 @@ def main():
         ir.heartbeat_pub.publish(Empty())
         ir.get_range()
         ir.publish_range(ir.distance)
-	ir_data.write("{} {}\n".format(datetime.utcnow().strftime("%M.%S.%f"), ir.distance))
         r.sleep()
 
 if __name__ == "__main__":
