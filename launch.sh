@@ -14,6 +14,7 @@ dt_launchfile_init
 
 # launching app
 dt_exec roslaunch pidrone_pkg drone.launch
+#this is where the node that communicates with the web browser is launched
 dt_exec roslaunch pidrone_pkg rosbridge_websocket.launch
 # ----------------------------------------------------------------------------
 # YOUR CODE ABOVE THIS LINE
