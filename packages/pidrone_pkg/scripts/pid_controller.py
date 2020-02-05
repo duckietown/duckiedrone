@@ -332,7 +332,7 @@ class PIDController(object):
 
 def main(ControllerClass):
     # Verbosity between 0 and 2, 2 is most verbose
-    verbose = 0
+    verbose = 1
 
     # ROS Setup
     ###########
@@ -389,7 +389,7 @@ def main(ControllerClass):
 
                 # Safety check to ensure drone does not fly too high
                 if (pid_controller.current_state.pose_with_covariance.pose.position.z >
-                0.7):
+                3.7):
                     fly_command = cmds.disarm_cmd
                     print("\n disarming because drone is too high \n")
                     break
@@ -421,6 +421,8 @@ def main(ControllerClass):
             print 'pid_error:       ', pid_controller.pid_error
         if verbose >= 1:
             print 'r,p,y,t:', fly_command
+            print 'throttle_low._i', pid_controller.pid.throttle_low._i
+            print 'throttle_low.init_i', pid_controller.pid.throttle_low.init_i
 
         loop_rate.sleep()
 

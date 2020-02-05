@@ -1,6 +1,6 @@
 <launch>
 
-  <node pkg="pidrone_pkg" type="pid_controller.py" name="pid_controller"></node>
+  <node pkg="pidrone_pkg" type="pid_controller.py" name="pid_controller" output="screen"></node>
 
   <node pkg="pidrone_pkg" type="state_estimator.py" name="state_estimator"></node>
 
