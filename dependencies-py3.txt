@@ -1,8 +1,0 @@
-# LIST YOUR PYTHON PACKAGES HERE
-
-#For pid
-tensorflow
-
-#For state estimator
-filterpy
-tensorflow
