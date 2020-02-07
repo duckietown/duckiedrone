@@ -123,7 +123,8 @@ class PIDController(object):
             self.desired_position.x = msg.position.x
             self.desired_position.y = msg.position.y
             # the desired z must be above z and below the range of the ir sensor (.55meters)
-            self.desired_position.z = msg.position.z if 0 <= desired_z <= 0.5 else self.last_desired_position.z
+            #height_safety_here
+            self.desired_position.z = msg.position.z if 0 <= desired_z <= 1.5 else self.last_desired_position.z
         # set the desired positions relative to the current position (except for z to make it more responsive)
         else:
             self.desired_position.x = self.current_position.x + msg.position.x
@@ -131,7 +132,8 @@ class PIDController(object):
             # set the disired z position relative to the last desired position (doesn't limit the mag of the error)
             # the desired z must be above z and below the range of the ir sensor (.55meters)
             desired_z = self.last_desired_position.z + msg.position.z
-            self.desired_position.z = desired_z if 0 <= desired_z <= 0.5 else self.last_desired_position.z
+            #height_safety_here
+            self.desired_position.z = desired_z if 0 <= desired_z <= 1.5 else self.last_desired_position.z
 
         if self.desired_position != self.last_desired_position:
             # the drone is moving between desired positions
@@ -388,6 +390,7 @@ def main(ControllerClass):
             if pid_controller.desired_mode == 'FLYING':
 
                 # Safety check to ensure drone does not fly too high
+                #height_safety_here
                 if (pid_controller.current_state.pose_with_covariance.pose.position.z >
                 3.7):
                     fly_command = cmds.disarm_cmd
@@ -420,9 +423,9 @@ def main(ControllerClass):
                 print 'velocity error:  ', pid_controller.velocity_error
             print 'pid_error:       ', pid_controller.pid_error
         if verbose >= 1:
-            print 'r,p,y,t:', fly_command
-            print 'throttle_low._i', pid_controller.pid.throttle_low._i
-            print 'throttle_low.init_i', pid_controller.pid.throttle_low.init_i
+            print 'r,p,y,t:', fly_command[-1]
+            #print 'throttle_low._i', pid_controller.pid.throttle_low._i
+            #print 'throttle._i', pid_controller.pid.throttle._i
 
         loop_rate.sleep()
 
