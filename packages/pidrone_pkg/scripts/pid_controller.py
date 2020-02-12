@@ -392,7 +392,11 @@ def main(ControllerClass):
                 # Safety check to ensure drone does not fly too high
                 #height_safety_here
                 if (pid_controller.current_state.pose_with_covariance.pose.position.z >
+<<<<<<< HEAD
                 3.7):
+=======
+                0.8):
+>>>>>>> f3204c8de839ae672b7e8a055d94baa5ca9fd5a7
                     fly_command = cmds.disarm_cmd
                     print("\n disarming because drone is too high \n")
                     break
