@@ -2,4 +2,9 @@
   <node pkg="pidrone_pkg" type="flight_controller_node.py" name="flight_controller_node" output="screen"></node>
 
   <node pkg="pidrone_pkg" type="lidar_pub.py" name="lidar_pub" output="screen"></node>
+
+  <!-- Joy stick nodes -->
+  <node respawn="true" pkg="joy" type="joy_node" name="drone_joy"></node>
+  <node pkg="pidrone_pkg" type="drone_joy_translator.py" name="drone_joy_translator" output="screen"></node>
+
 </launch>
