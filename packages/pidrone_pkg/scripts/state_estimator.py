@@ -345,7 +345,7 @@ def main():
                               'loop of the UKF (default: 30)'))
                               
     args = parser.parse_args(rospy.myargv()[1:])
-    
+    print "state estimator args", args 
     try:
         se = StateEstimator(primary=args.primary,
                             others=args.others,
@@ -358,7 +358,7 @@ def main():
                             ir_var=args.ir_var,
                             loop_hz=args.loop_hz)
     except Exception as e:
-        print e
+        print "State Estimator Exception", e
     finally:
         # Terminate the subprocess calls. Note, however, that if Ctrl-C is
         # entered in stdin, it seems that the subprocesses also get the Ctrl-C
