@@ -1,13 +1,13 @@
 <launch>
 
-  <node pkg="pidrone_pkg" type="pid_controller.py" name="pid_controller"></node>
+  <node pkg="pidrone_pkg" type="pid_controller.py" name="pid_controller" output="screen"></node>
 
-  <node pkg="pidrone_pkg" type="state_estimator.py" name="state_estimator" output="screen"></node>
+  <node pkg="pidrone_pkg" type="state_estimator.py" name="state_estimator"></node>
 
 
   <!-- Joy Stick Nodes -->
   <node respawn="true" pkg="joy" type="joy_node" name="drone_joy"></node>
-  <node pkg="pidrone_pkg" type="drone_joy_translator.py" name="drone_joy_translator" output="screen"></node>
+  <node pkg="pidrone_pkg" type="drone_joy_translator.py" name="drone_joy_translator"></node>
   
   <!--Heartbeat node pkg="pidrone_pkg" type="heartbeat_publisher_NEVER_RUN_ON_DRONE.py" name="heartbeat_publisher_NEVER_RUN_ON_DRONE" output="screen" -->
 

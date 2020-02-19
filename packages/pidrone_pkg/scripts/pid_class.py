@@ -184,12 +184,12 @@ class PID:
         # Compute throttle command
         print "\nZ error ", error.z, " cm\n"
         if abs(error.z) < self.trim_controller_thresh_throttle:
-            print "using throttle_low._i"
+            #print "using throttle_low._i"
             self.throttle_low._i += self.throttle._i
             self.throttle._i = 0
             cmd_t = self.throttle_low.step(error.z, time_elapsed)
         else:
-            print "using throttle._i+thortle?"
+            #print "using throttle._i+thortle?"
             if error.z > self.trim_controller_cap_throttle:
                 self.throttle_low.step(self.trim_controller_cap_throttle, time_elapsed)
             elif error.z < -self.trim_controller_cap_throttle:
