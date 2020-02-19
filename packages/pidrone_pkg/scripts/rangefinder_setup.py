@@ -24,8 +24,8 @@ import time
 #then we shut down two of the remaining three and send
 #the remap command, then one of the remaining two,
 # then we remap the remaing one. 
-
-
+sys.exit(10)
+GPIO.setwarnings(False)
 try:
     GPIO.setmode(GPIO.BCM)
     mode = GPIO.getmode()
@@ -87,7 +87,9 @@ try:
     tof4 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x33)
     tof4.open()
 except RuntimeError:
+    GPIO.cleanup() # cleanup all GPIO 
     #something along the lines of:
     #RuntimeError: VL53L1X not found on adddress: 29
     sys.exit(10)
-
+finally:
+    GPIO.cleanup() # cleanup all GPIO
