@@ -12,10 +12,16 @@ dt_launchfile_init
 # NOTE: Use the variable CODE_DIR to know the absolute path to your code
 # NOTE: Use `dt_exec COMMAND` to run the main process (blocking process)
 
-# remap I2C, note this is not needed for infrared but should not cause issues
-# if you run it.
-if [ "${DEBUG}" = "1" ]; then echo "Remapping I2C..."; fi
-python2 $CODE_DIR/packages/pidrone_pkg/scripts/remap_i2c.py
+# Range finder setup
+# if using lidar this will remap the i2c channels so that each of the 4
+# sensors is on it's own channel and exit with error code zero
+# if it fails to find the lidar hardware it will exit with error code 1 and
+# based on the error code either the lidar or the infrared node will be run
+if [ "${DEBUG}" = "1" ]; then echo "Rangefinder setup..."; fi
+python2 $CODE_DIR/packages/pidrone_pkg/scripts/rangefinder_setup.py
+rangefinder_status=$?
+if [ "${DEBUG}" = "1" ];
+then echo rangefinder_setup exit code $rangefinder_status; fi
 if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 
 
@@ -25,9 +31,15 @@ python2 $CODE_DIR/packages/pidrone_pkg/scripts/calibrateAcc.py
 if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 
 
-# launching app
+# launching rangefinder
+if [$rangefinder_status -eq 0]; 
+then dt_exec roslaunch pidrone_pkg lidar.launch; fi
+if [$rangefinder_status -eq 10];
+then dt_exec roslaunch pidrone_pkg infrared.launch; fi
+#launching app
 dt_exec roslaunch pidrone_pkg drone.launch
 
+#Choose range finder based on 
 
 # ----------------------------------------------------------------------------
 # YOUR CODE ABOVE THIS LINE

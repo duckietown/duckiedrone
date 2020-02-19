@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="pidrone_pkg" type="infrared_pub.py" name="infrared_pub" output="screen"></node>
+</launch>

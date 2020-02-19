@@ -1,21 +1,49 @@
+#!/usr/bin/env python
+
 import sys
 import os
 import rospy
 import signal
-import Adafruit_ADS1x15
+import time
 from std_msgs.msg import Empty
 from sensor_msgs.msg import Range
 
-from datetime import datetime
+import RPi.GPIO as GPIO
+import VL53L1X
+
+
+### this block is to set up the lidar range finders
+
+# sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
+
+
+### the try/except block is to allow compatibility
+### with the drones that use IR sensors
+### it is kind of grubby but ideally it will make
+### development smoother
+GPIO.setmode(GPIO.BCM)
+mode = GPIO.getmode()
+#then innit the first one
+tof = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x30)
+tof.open()
+
+
+tof.start_ranging(1)
+
+#this is to increase frequency
+budget = 1
+inter = 1
+tof.set_timing(budget, inter)
+### end of setup block
 
 class IR(object):
     """A class that reads, analyzes, and publishes IR sensor data.
+
     Publisher:
     /pidrone/infrared
     """
 
     def __init__(self):
-        self.adc = Adafruit_ADS1x15.ADS1115()
         self.GAIN = 1
         self.distance = 0
         # values used to define the slope and intercept of
@@ -24,19 +52,15 @@ class IR(object):
         self.b = -8.3 + 7.5
 
     def get_range(self):
-        """Read the data from the adc and update the distance and
-        smoothed_distance values."""
-        voltage = self.adc.read_adc(0, self.GAIN)
-        if voltage <= 0:
-            voltage = 1
-            print "ERROR: BAD VOLTAGE!!!"
-        self.distance = ((1.0 / voltage) * self.m + self.b) / 100.0 # 100 is for cm -> m
+        """need to convert from mm to meters"""
+        self.distance = tof.get_distance() / 1000.0
+
 
     def publish_range(self, range):
         """Create and publish the Range message to publisher."""
         msg = Range()
-        msg.max_range = 0.8
-        msg.min_range = 0
+        msg.max_range = 3.0 #different max for lidar version
+        msg.min_range = 0   #range in meters
         msg.range = range
         msg.header.frame_id = "base"
         msg.header.stamp = rospy.Time.now()
@@ -76,8 +100,8 @@ def main():
         ir.heartbeat_pub.publish(Empty())
         ir.get_range()
         ir.publish_range(ir.distance)
-        r.sleep()
+
+
 
 if __name__ == "__main__":
     main()
-
