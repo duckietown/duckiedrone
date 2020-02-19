@@ -1,4 +1,22 @@
 <launch>
-  <node pkg="pidrone_pkg" type="lidar_pub.py" name="lidar_pub" output="screen"></node>
+  <arg name="rangefinder_launch" doc="rangefinder type: lidar or infrared">
+  <arg name="i2c1" doc="i2c channel that sensor has been remapped to">
+  <arg name="i2c2">
+  <arg name="i2c3">
+  <arg name="i2c4">
+
+  <!-- TODO implement argument parsing for lidar_pub.py to accept a channel as an arg -->
+  <group if "$(eval rangefinder_launch == 'lidar')">
+    <node pkg="pidrone_pkg" type="lidar_pub_single_30.py" name="lidar_pub_single_30" output="screen"></node>
+    <node pkg="pidrone_pkg" type="lidar_pub_single_31.py" name="lidar_pub_single_31" output="screen"></node>
+    <node pkg="pidrone_pkg" type="lidar_pub_single_32.py" name="lidar_pub_single_32" output="screen"></node>
+    <node pkg="pidrone_pkg" type="lidar_pub_single_33.py" name="lidar_pub_single_33" output="screen"></node>
+  </group>
+
+  <group if "$(eval rangefinder_launch == 'infrared')">
+    <node pkg="pidrone_pkg" type="infrared_pub.py" name="infrared_pub" output="screen"></node>
+  </group>
+
+  <!-- Launch the rest of the nodes -->
   <node pkg="pidrone_pkg" type="flight_controller_node.py" name="flight_controller_node" output="screen"></node>
 </launch>
