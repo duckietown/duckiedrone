@@ -1,3 +1,6 @@
 <launch>
-  <node pkg="pidrone_pkg" type="lidar_pub.py" name="lidar_pub" output="screen"></node>
+  <node pkg="pidrone_pkg" type="lidar_pub_single_30.py" name="lidar_pub_single_30" output="screen"></node>
+  <node pkg="pidrone_pkg" type="lidar_pub_single_31.py" name="lidar_pub_single_31" output="screen"></node>
+  <node pkg="pidrone_pkg" type="lidar_pub_single_32.py" name="lidar_pub_single_32" output="screen"></node>
+  <node pkg="pidrone_pkg" type="lidar_pub_single_33.py" name="lidar_pub_single_33" output="screen"></node>
 </launch>

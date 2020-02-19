@@ -12,6 +12,13 @@ import RPi.GPIO as GPIO
 import VL53L1X
 
 
+#in the future I intend to have one lidar_pub_single.py
+#and be able to pass the i2c address, the dirty fix
+#in the meantime is to hardcode the values and have
+#four files
+i2c=0x30
+
+
 ### this block is to set up the lidar range finders
 
 # sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
@@ -24,7 +31,7 @@ import VL53L1X
 GPIO.setmode(GPIO.BCM)
 mode = GPIO.getmode()
 #then innit the first one
-tof = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x30)
+tof = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c)
 tof.open()
 
 

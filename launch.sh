@@ -32,11 +32,18 @@ if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 
 
 # launching rangefinder
-if [$rangefinder_status -eq 0]; 
-then dt_exec roslaunch pidrone_pkg lidar.launch; fi
-if [$rangefinder_status -eq 10];
-then dt_exec roslaunch pidrone_pkg infrared.launch; fi
+if [ $rangefinder_status -eq 0 ] 
+then rangefinderlaunch="lidar.launch"
+echo dt_exec_roslaunch_pidrone_pkg_lidar.launch
+fi
+
+if [ $rangefinder_status -eq 10 ]
+then rangefinderlaunch="infrared.launch"
+echo dt_exec_roslaunch_pidrone_pkg_infrared.launch
+fi
+
 #launching app
+dt_exec roslaunch pidrone_pkg $rangefinderlaunch
 dt_exec roslaunch pidrone_pkg drone.launch
 
 #Choose range finder based on 

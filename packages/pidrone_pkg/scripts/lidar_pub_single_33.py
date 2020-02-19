@@ -8,63 +8,40 @@ import time
 from std_msgs.msg import Empty
 from sensor_msgs.msg import Range
 
+import RPi.GPIO as GPIO
+import VL53L1X
+
+
+#in the future I intend to have one lidar_pub_single.py
+#and be able to pass the i2c address, the dirty fix
+#in the meantime is to hardcode the values and have
+#four files
+i2c=0x33
+
 
 ### this block is to set up the lidar range finders
-try:
-    import RPi.GPIO as GPIO
-except RuntimeError:
-    print("Error importing RPi.GPIO!  This is probably \
-      because you need superuser privileges.  You can \
-      achieve this by using 'sudo' to run your script")
 
 # sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
-import VL53L1X
-import numpy as np
 
-print("LIDAR PUB PY HAS BEEN RUN")
+
 ### the try/except block is to allow compatibility
 ### with the drones that use IR sensors
 ### it is kind of grubby but ideally it will make
 ### development smoother
-try:
-    GPIO.setmode(GPIO.BCM)
-    mode = GPIO.getmode()
-    #then innit the first one
-    tof1 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x30)
-    tof1.open()
-
-    tof2 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x31)
-    tof2.open()
-
-    tof3 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x32)
-    tof3.open()
-
-    tof4 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x33)
-    tof4.open()
-
-    tof1.start_ranging(1)
-    tof2.start_ranging(1)
-    tof3.start_ranging(1)
-    tof4.start_ranging(1)
-
-    #this is to increase frequency
-    budget = 1
-    inter = 1
-    tof1.set_timing(budget, inter)
-    tof2.set_timing(budget, inter)
-    tof3.set_timing(budget, inter)
-    tof4.set_timing(budget, inter)
-except:
-    print "Failed to start LIDAR sensors: Trying Infrared"
-    os.system("python infrared_pub.py")
-    exit()
+GPIO.setmode(GPIO.BCM)
+mode = GPIO.getmode()
+#then innit the first one
+tof = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c)
+tof.open()
 
 
+tof.start_ranging(1)
 
+#this is to increase frequency
+budget = 1
+inter = 1
+tof.set_timing(budget, inter)
 ### end of setup block
-tofs = (tof1, tof2, tof3, tof4)
-tof_index = 0
-from datetime import datetime
 
 class IR(object):
     """A class that reads, analyzes, and publishes IR sensor data.
@@ -82,19 +59,9 @@ class IR(object):
         self.b = -8.3 + 7.5
 
     def get_range(self):
-        """Read the data from the LIDARs and update the distance and
-        smoothed_distance values."""
-        #d1 = tof1.get_distance()
-        #d2 = tof2.get_distance()
-        #d3 = tof3.get_distance()
-        #d4 = tof4.get_distance()
-        #median = np.median(np.array([d1,d2,d3,d4]), axis=0)
-        #self.distance = median/1000.0
-        global tof_index
         """need to convert from mm to meters"""
-        self.distance = tofs[tof_index].get_distance() / 1000.0
-        tof_index = tof_index + 1
-        tof_index = tof_index % 4
+        self.distance = tof.get_distance() / 1000.0
+
 
     def publish_range(self, range):
         """Create and publish the Range message to publisher."""
