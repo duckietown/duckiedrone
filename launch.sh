@@ -43,7 +43,7 @@ echo dt_exec_roslaunch_pidrone_pkg_infrared.launch
 fi
 
 #launching app
-dt_exec roslaunch pidrone_pkg $rangefinderlaunch
+#dt_exec roslaunch pidrone_pkg $rangefinderlaunch
 dt_exec roslaunch pidrone_pkg drone.launch
 
 #Choose range finder based on 
