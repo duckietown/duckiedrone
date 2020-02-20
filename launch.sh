@@ -48,7 +48,7 @@ then rangefinderlaunch="infrared"
 fi
 
 #launching app
-dt_exec roslaunch pidrone_pkg drone.launch rangefinder:=$rangefinder_launch \
+dt_exec roslaunch pidrone_pkg drone.launch rangefinder:=$rangefinderlaunch \
 	i2c1:=$i2c_address1 i2c2:=$i2c_address2 i2c3:=$i2c_address3 \
 	i2c4:=$i2c_address4
 
