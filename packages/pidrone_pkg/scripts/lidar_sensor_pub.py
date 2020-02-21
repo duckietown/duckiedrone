@@ -81,7 +81,6 @@ def main():
     node_name = os.path.splitext(os.path.basename(__file__))[0]
     rospy.init_node(node_name)
 
-    print rospy.get_param_names(), "NAMES"
     i2c= rospy.get_param("~i2cchannel")
     i2c= int(i2c, 16)
     max_range= rospy.get_param("/maxrange")
