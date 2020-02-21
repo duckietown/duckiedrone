@@ -182,9 +182,9 @@ class PID:
         cmd_y = 1500 + cmd_yaw_velocity
 
         # Compute throttle command
-        print "\nZ error ", error.z, " cm"
-        print   "        \t\t X error", error.x, "cm"
-        print   "        \t\t\t\t Y error", error.y, "cm\n\n"
+        
+        print "Errors: Z: ", str(error.z)[:5], "\t X ", str(error.z)[:5], "\t Y "str(error.z)[:5], "\t\t\t\r",
+
         if abs(error.z) < self.trim_controller_thresh_throttle:
             #print "using throttle_low._i"
             self.throttle_low._i += self.throttle._i

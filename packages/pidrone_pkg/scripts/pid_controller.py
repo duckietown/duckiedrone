@@ -334,7 +334,7 @@ class PIDController(object):
 
 def main(ControllerClass):
     # Verbosity between 0 and 2, 2 is most verbose
-    verbose = 1
+    verbose = 0
 
     # ROS Setup
     ###########
@@ -424,8 +424,8 @@ def main(ControllerClass):
             print 'pid_error:       ', pid_controller.pid_error
         if verbose >= 1:
             print 'r,p,y,t:', fly_command[-1]
-            #print 'throttle_low._i', pid_controller.pid.throttle_low._i
-            #print 'throttle._i', pid_controller.pid.throttle._i
+            print 'throttle_low._i', pid_controller.pid.throttle_low._i
+            print 'throttle._i', pid_controller.pid.throttle._i
 
         loop_rate.sleep()
 
