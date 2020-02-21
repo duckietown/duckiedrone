@@ -24,7 +24,11 @@ i2c_address4="0x33"
 # based on the error code either the lidar or the infrared node will be run
 if [ "${DEBUG}" = "1" ]; then echo "Rangefinder setup..."; fi
 set +e
-python2 $CODE_DIR/packages/pidrone_pkg/scripts/rangefinder_setup.py
+python2 $CODE_DIR/packages/pidrone_pkg/scripts/rangefinder_setup.py \
+        --channels \
+        $i2c_address1 $i2c_address2 $i2c_address3 \
+        $i2c_address4
+
 rangefinder_status=$?
 set -e
 if [ "${DEBUG}" = "1" ];
