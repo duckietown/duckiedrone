@@ -42,7 +42,7 @@ fi
 if [ $rangefinder_status -eq 10 ]
 then 
 	rangefinderlaunch="infrared"
-	maxrange="0.8"
+	maxrange="0.65"
 fi
 
 
