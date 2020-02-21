@@ -34,6 +34,9 @@ class FlightController(object):
     /pidrone/heartbeat/web_interface
     /pidrone/heartbeat/pid_controller
     /pidrone/state
+    /pidrone/infrared 
+
+
     """
 
     def __init__(self):
@@ -95,6 +98,7 @@ class FlightController(object):
             y = msg.yaw
             t = msg.throttle
             self.command = [r,p,y,t]
+
 
     # Update methods:
     #################
@@ -319,11 +323,15 @@ def main():
     ############
     rospy.Subscriber("/pidrone/desired/mode", Mode, fc.desired_mode_callback)
     rospy.Subscriber('/pidrone/fly_commands', RC, fc.fly_commands_callback)
+
+
     # heartbeat subscribers
     rospy.Subscriber("/pidrone/heartbeat/infrared", Empty, fc.heartbeat_infrared_callback)
     rospy.Subscriber("/pidrone/heartbeat/web_interface", Empty, fc.heartbeat_web_interface_callback)
     rospy.Subscriber("/pidrone/heartbeat/pid_controller", Empty, fc.heartbeat_pid_controller_callback)
     rospy.Subscriber("/pidrone/state", State, fc.heartbeat_state_estimator_callback)
+
+
 
 
     signal.signal(signal.SIGINT, fc.ctrl_c_handler)

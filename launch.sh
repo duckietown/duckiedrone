@@ -34,11 +34,15 @@ if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 
 # Determine rangefinder availibility
 if [ $rangefinder_status -eq 0 ] 
-then rangefinderlaunch="lidar"
+then 
+	rangefinderlaunch="lidar"
+	maxrange="3.1"
 fi
 
 if [ $rangefinder_status -eq 10 ]
-then rangefinderlaunch="infrared"
+then 
+	rangefinderlaunch="infrared"
+	maxrange="0.8"
 fi
 
 
@@ -55,6 +59,7 @@ if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 
 #launching app
 dt_exec roslaunch pidrone_pkg drone.launch rangefinder:=$rangefinderlaunch \
+	maxrange:=$maxrange \
 	i2c1:=$i2c_address1 i2c2:=$i2c_address2 i2c3:=$i2c_address3 \
 	i2c4:=$i2c_address4
 

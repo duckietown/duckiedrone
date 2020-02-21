@@ -36,13 +36,8 @@ class IR(object):
     ### with the drones that use IR sensors
     
 
-    def __init__(self, i2c):
-        self.GAIN = 1
-        self.distance = 0
-        # values used to define the slope and intercept of
-        # distance as a function of voltage : d(v) = 1/v * m + b
-        self.m = 181818.18181818182 * 1.238
-        self.b = -8.3 + 7.5
+    def __init__(self, i2c, max_range):
+        self.max_range = max_range
 
         ### development smoother
         GPIO.setmode(GPIO.BCM)
@@ -62,12 +57,12 @@ class IR(object):
         self.distance = self.tof.get_distance() / 1000.0
 
 
-    def publish_range(self, range):
+    def publish_range(self, input_range):
         """Create and publish the Range message to publisher."""
         msg = Range()
-        msg.max_range = 3.0 #different max for lidar version
-        msg.min_range = 0   #range in meters
-        msg.range = range
+        msg.max_range = self.max_range #different max for lidar version
+        msg.min_range = 0.0   #range in meters
+        msg.range = input_range
         msg.header.frame_id = "base"
         msg.header.stamp = rospy.Time.now()
         self.range_pub.publish(msg)
@@ -86,13 +81,16 @@ def main():
     node_name = os.path.splitext(os.path.basename(__file__))[0]
     rospy.init_node(node_name)
 
-
+    print rospy.get_param_names(), "NAMES"
     i2c= rospy.get_param("~i2cchannel")
     i2c= int(i2c, 16)
+    max_range= rospy.get_param("/maxrange")
+    max_range= float(max_range)
+
     #convert i2c channel from hex string to int
 
     # create IR object
-    ir = IR(i2c)
+    ir = IR(i2c, max_range)
 
     # Publishers
     ############
@@ -111,6 +109,7 @@ def main():
         ir.heartbeat_pub.publish(Empty())
         ir.get_range()
         ir.publish_range(ir.distance)
+        r.sleep()
 
 
 

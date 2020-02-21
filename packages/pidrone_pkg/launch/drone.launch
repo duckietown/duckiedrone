@@ -2,18 +2,23 @@
 <launch>
 	<arg name="rangefinder" 
 		doc="rangefinder type: lidar or infrared"/>
+	<arg name="maxrange"
+		doc="max range for given sensor type"/>
 	<arg name="i2c1" 
 		doc="i2c channel that sensor has been remapped to"/>
-	  <arg name="i2c2"/>
-	  <arg name="i2c3"/>
-	  <arg name="i2c4"/>
+	<arg name="i2c2"/>
+	<arg name="i2c3"/>
+        <arg name="i2c4"/>
+
+
+	<param name="maxrange" value="$(arg maxrange)" />
 
   <!-- lidar_sensor_pub nodes take in the i2c address for each sensor -->
   <group if="$(eval arg('rangefinder') == 'lidar')">
 
 
 	  <node pkg="pidrone_pkg" type="lidar_sensor_pub.py" 
-		  name="lidar_sensor_pub1">
+		  name="lidar_sensor_pub1" output="screen">
 		  <param name="i2cchannel" value="$(arg i2c1)" /></node>
 
           <node pkg="pidrone_pkg" type="lidar_sensor_pub.py" 
