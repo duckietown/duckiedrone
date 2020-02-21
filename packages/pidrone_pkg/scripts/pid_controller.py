@@ -426,6 +426,7 @@ def main(ControllerClass):
             print 'throttle_low._i', pid_controller.pid.throttle_low._i
             print 'throttle._i', pid_controller.pid.throttle._i
         if verbose >= 1:
+            error = pid_controller.pid_error
             print "Errors: Z: ", str(error.z)[:5], "\t X ", str(error.x)[:5], "\t Y ", str(error.y)[:5], "\t\t\t\r",
 
         loop_rate.sleep()
