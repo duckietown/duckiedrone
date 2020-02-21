@@ -32,12 +32,6 @@ then echo rangefinder_setup exit code $rangefinder_status; fi
 if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 
 
-#Calibrate Accelerometer on startup (drone must be level)
-if [ "${DEBUG}" = "1" ]; then echo "Calibrating Accelerometer..."; fi
-python2 $CODE_DIR/packages/pidrone_pkg/scripts/calibrateAcc.py
-if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
-
-
 # Determine rangefinder availibility
 if [ $rangefinder_status -eq 0 ] 
 then rangefinderlaunch="lidar"
@@ -46,6 +40,18 @@ fi
 if [ $rangefinder_status -eq 10 ]
 then rangefinderlaunch="infrared"
 fi
+
+
+#Calibrate Accelerometer on startup (drone must be level)
+if [ "${DEBUG}" = "1" ]; then echo rangefinderlaunch $rangefinderlaunch; fi
+
+
+#Calibrate Accelerometer on startup (drone must be level)
+if [ "${DEBUG}" = "1" ]; then echo "Calibrating Accelerometer..."; fi
+python2 $CODE_DIR/packages/pidrone_pkg/scripts/calibrateAcc.py
+if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
+
+
 
 #launching app
 dt_exec roslaunch pidrone_pkg drone.launch rangefinder:=$rangefinderlaunch \

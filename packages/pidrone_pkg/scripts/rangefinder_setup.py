@@ -24,7 +24,6 @@ import time
 #then we shut down two of the remaining three and send
 #the remap command, then one of the remaining two,
 # then we remap the remaing one. 
-sys.exit(10)
 GPIO.setwarnings(False)
 try:
     GPIO.setmode(GPIO.BCM)

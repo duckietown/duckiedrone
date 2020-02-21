@@ -13,19 +13,19 @@
 
 
 	  <node pkg="pidrone_pkg" type="lidar_sensor_pub.py" 
-		  name="lidar_sensor_pub1">
+		  name="lidar_sensor_pub1" output="screen">
 		  <param name="i2cchannel" value="$(arg i2c1)" /></node>
 
           <node pkg="pidrone_pkg" type="lidar_sensor_pub.py" 
-		  name="lidar_sensor_pub2">
+		  name="lidar_sensor_pub2" output="screen">
 		  <param name="i2cchannel" value="$(arg i2c2)" /></node>
 
 	  <node pkg="pidrone_pkg" type="lidar_sensor_pub.py" 
-		  name="lidar_sensor_pub3">
+		  name="lidar_sensor_pub3" output="screen">
 		  <param name="i2cchannel" value="$(arg i2c3)" /></node>
 
 	  <node pkg="pidrone_pkg" type="lidar_sensor_pub.py" 
-		  name="lidar_sensor_pub4">
+		  name="lidar_sensor_pub4" output="screen">
 		  <param name="i2cchannel" value="$(arg i2c4)" /></node>
 
 	  <node pkg="pidrone_pkg" type="lidar_smoothing.py" 

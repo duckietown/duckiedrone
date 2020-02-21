@@ -12,36 +12,15 @@ import RPi.GPIO as GPIO
 import VL53L1X
 
 
-#in the future I intend to have one lidar_pub_single.py
-#and be able to pass the i2c address, the dirty fix
-#in the meantime is to hardcode the values and have
-#four files
-i2c=0x30
+#Each of the four spinning lidar sensor nodes
+#gets passed the specific i2c channel it is meant to
+#use through the local param in the launch file as 
+#a hex string '0x3A' for example, must convert to 
+#an int
 
 
-### this block is to set up the lidar range finders
-
-# sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
 
 
-### the try/except block is to allow compatibility
-### with the drones that use IR sensors
-### it is kind of grubby but ideally it will make
-### development smoother
-GPIO.setmode(GPIO.BCM)
-mode = GPIO.getmode()
-#then innit the first one
-tof = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c)
-tof.open()
-
-
-tof.start_ranging(1)
-
-#this is to increase frequency
-budget = 1
-inter = 1
-tof.set_timing(budget, inter)
-### end of setup block
 
 class IR(object):
     """A class that reads, analyzes, and publishes IR sensor data.
@@ -49,8 +28,13 @@ class IR(object):
     Publisher:
     /pidrone/infrared
     """
+    ### this block is to set up the lidar range finders
+    # sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
+    ### the try/except block is to allow compatibility
+    ### with the drones that use IR sensors
+    
 
-    def __init__(self):
+    def __init__(self, i2c):
         self.GAIN = 1
         self.distance = 0
         # values used to define the slope and intercept of
@@ -58,9 +42,22 @@ class IR(object):
         self.m = 181818.18181818182 * 1.238
         self.b = -8.3 + 7.5
 
+        ### development smoother
+        GPIO.setmode(GPIO.BCM)
+        mode = GPIO.getmode()
+        #then innit the first one
+        self.tof = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c)
+        self.tof.open()
+        self.tof.start_ranging(1)
+        #this is to increase frequency
+        budget = 1
+        inter = 1
+        self.tof.set_timing(budget, inter)
+        ### end of setup block
+
     def get_range(self):
         """need to convert from mm to meters"""
-        self.distance = tof.get_distance() / 1000.0
+        self.distance = self.tof.get_distance() / 1000.0
 
 
     def publish_range(self, range):
@@ -87,8 +84,12 @@ def main():
     node_name = os.path.splitext(os.path.basename(__file__))[0]
     rospy.init_node(node_name)
 
+
+    i2c= rospy.get_param("~i2cchannel")
+    i2c= int(i2c, 16)
+
     # create IR object
-    ir = IR()
+    ir = IR(i2c)
 
     # Publishers
     ############
