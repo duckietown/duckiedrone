@@ -20,7 +20,9 @@ class PIDController(object):
     error calculated by the desired and current velocity and position of the drone
     '''
 
-    def __init__(self):
+    def __init__(self, max_range):
+        #set max range for range finder
+        self.max_range = max_range
         # Initialize the current and desired modes
         self.current_mode = Mode('DISARMED')
         self.desired_mode = Mode('DISARMED')
@@ -124,7 +126,7 @@ class PIDController(object):
             self.desired_position.y = msg.position.y
             # the desired z must be above z and below the range of the ir sensor (.55meters)
             #height_safety_here
-            self.desired_position.z = msg.position.z if 0 <= desired_z <= 1.5 else self.last_desired_position.z
+            self.desired_position.z = msg.position.z if 0 <= desired_z <= self.max_range*0.8 else self.last_desired_position.z
         # set the desired positions relative to the current position (except for z to make it more responsive)
         else:
             self.desired_position.x = self.current_position.x + msg.position.x
@@ -133,7 +135,7 @@ class PIDController(object):
             # the desired z must be above z and below the range of the ir sensor (.55meters)
             desired_z = self.last_desired_position.z + msg.position.z
             #height_safety_here
-            self.desired_position.z = desired_z if 0 <= desired_z <= 1.5 else self.last_desired_position.z
+            self.desired_position.z = desired_z if 0 <= desired_z <= self.max_range*0.8 else self.last_desired_position.z
 
         if self.desired_position != self.last_desired_position:
             # the drone is moving between desired positions
@@ -361,6 +363,11 @@ def main(ControllerClass):
     rospy.Subscriber('/pidrone/reset_transform', Empty, pid_controller.reset_callback)
     rospy.Subscriber('/pidrone/picamera/lost', Bool, pid_controller.lost_callback)
 
+    # Parameters:
+    #############
+    max_range= rospy.get_param("/maxrange")
+    max_range= float(max_range)
+
     # Non-ROS Setup
     ###############
     # set up ctrl-c handler
@@ -392,7 +399,7 @@ def main(ControllerClass):
                 # Safety check to ensure drone does not fly too high
                 #height_safety_here
                 if (pid_controller.current_state.pose_with_covariance.pose.position.z >
-                3.7):
+                max_range):
                     fly_command = cmds.disarm_cmd
                     print("\n disarming because drone is too high \n")
                     break

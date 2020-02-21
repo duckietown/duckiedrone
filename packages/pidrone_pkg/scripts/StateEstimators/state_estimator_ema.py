@@ -26,7 +26,7 @@ class EMAStateEstimator(object):
     /pidrone/picamera/twist
     '''
 
-    def __init__(self):
+    def __init__(self, max_range):
         ''' A constructor for EMAStateEstimator
         '''
         # Initialize the State:
@@ -49,6 +49,9 @@ class EMAStateEstimator(object):
         self.mw_angle_comp_x = 0
         self.mw_angle_comp_y = 0
         self.mw_angle_coeff = 0.2
+
+        # max range for valid heights
+        self.max_range = max_range
 
 
     # ROS Subscriber Callback Methods:
@@ -145,7 +148,7 @@ class EMAStateEstimator(object):
         # use an ema filter to smoothe the range reading
         smoothed_altitude= (1.0 - alpha) * curr_altitude + alpha * prev_altitude
         # ensure that the range value is between 0 and 0.55 m
-        smoothed_altitude = max(0, min(smoothed_altitude, 0.55))
+        smoothed_altitude = max(0, min(smoothed_altitude, self.max_range*0.8))
         # update the current z position
         self.state.pose_with_covariance.pose.position.z = smoothed_altitude
 
@@ -188,8 +191,13 @@ def main():
     node_name = os.path.splitext(os.path.basename(__file__))[0]
     rospy.init_node(node_name)
 
+    # Parameters
+    ############
+    max_range= rospy.get_param("/maxrange")
+    max_range= float(max_range)
+
     # Instantiate an EMAStateEstimator object
-    state_estimator = EMAStateEstimator()
+    state_estimator = EMAStateEstimator(max_range)
 
     # Publishers
     ############
@@ -203,6 +211,8 @@ def main():
     rospy.Subscriber('/pidrone/picamera/pose', PoseStamped, state_estimator.pose_callback)
     rospy.Subscriber('/pidrone/infrared', Range, state_estimator.range_callback)
     rospy.Subscriber('/pidrone/imu', Imu, state_estimator.imu_callback)
+
+
 
     # set up ctrl-c handler
     signal.signal(signal.SIGINT, state_estimator.ctrl_c_handler)
