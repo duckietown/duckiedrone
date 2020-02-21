@@ -183,7 +183,7 @@ class PID:
 
         # Compute throttle command
         
-        print "Errors: Z: ", str(error.z)[:5], "\t X ", str(error.z)[:5], "\t Y "str(error.z)[:5], "\t\t\t\r",
+        #print "Errors: Z: ", str(error.z)[:5], "\t X ", str(error.x)[:5], "\t Y ", str(error.y)[:5], "\t\t\t\r",
 
         if abs(error.z) < self.trim_controller_thresh_throttle:
             #print "using throttle_low._i"
