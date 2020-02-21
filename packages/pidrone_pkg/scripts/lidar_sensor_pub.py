@@ -26,7 +26,9 @@ class IR(object):
     """A class that reads, analyzes, and publishes IR sensor data.
 
     Publisher:
-    /pidrone/infrared
+    /pidrone/lidar_sensor
+    /pidrone/heartbeat/infrared  #TODO rename all IR instances to either
+    lidar or rangefinder on case by case basis
     """
     ### this block is to set up the lidar range finders
     # sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
@@ -77,7 +79,7 @@ class IR(object):
 
 def main():
     """Start the ROS node, create the publishers, and continuosly update and
-    publish the IR sensor data"""
+    publish the lidar sensor data"""
 
     # ROS Setup
     ###########
@@ -87,6 +89,7 @@ def main():
 
     i2c= rospy.get_param("~i2cchannel")
     i2c= int(i2c, 16)
+    #convert i2c channel from hex string to int
 
     # create IR object
     ir = IR(i2c)
