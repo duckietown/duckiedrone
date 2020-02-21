@@ -343,8 +343,13 @@ def main(ControllerClass):
     node_name = os.path.splitext(os.path.basename(__file__))[0]
     rospy.init_node(node_name)
 
+    # Parameters:
+    #############
+    max_range= rospy.get_param("/maxrange")
+    max_range= float(max_range)
+
     # create the PIDController object
-    pid_controller = ControllerClass()
+    pid_controller = ControllerClass(max_range)
 
     # Publishers
     ############
@@ -363,10 +368,7 @@ def main(ControllerClass):
     rospy.Subscriber('/pidrone/reset_transform', Empty, pid_controller.reset_callback)
     rospy.Subscriber('/pidrone/picamera/lost', Bool, pid_controller.lost_callback)
 
-    # Parameters:
-    #############
-    max_range= rospy.get_param("/maxrange")
-    max_range= float(max_range)
+
 
     # Non-ROS Setup
     ###############
