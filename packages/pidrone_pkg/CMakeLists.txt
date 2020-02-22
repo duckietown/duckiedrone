@@ -51,7 +51,6 @@ add_message_files(
   FILES
   RC.msg
   Mode.msg
-  Battery.msg
   StateGroundTruth.msg
   UkfStats.msg
 )
