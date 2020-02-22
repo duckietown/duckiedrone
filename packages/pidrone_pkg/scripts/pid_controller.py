@@ -10,7 +10,8 @@ import numpy as np
 import command_values as cmds
 from pid_class import PID, PIDaxis
 from geometry_msgs.msg import Pose, Twist
-from pidrone_pkg.msg import Mode, RC, State
+from nav_msgs.msg import Odometry
+from pidrone_pkg.msg import Mode, RC
 from std_msgs.msg import Float32, Empty, Bool
 from three_dim_vec import Position, Velocity, Error, RPY
 
@@ -82,8 +83,8 @@ class PIDController(object):
         self.previous_rpy = RPY()
 
         # initialize the current and previous states
-        self.current_state = State()
-        self.previous_state = State()
+        self.current_state = Odometry()
+        self.previous_state = Odometry()
 
         # Store the command publisher
         self.cmdpub = None
@@ -210,13 +211,13 @@ class PIDController(object):
         make calculations concise
         """
         # store the positions
-        pose = self.current_state.pose_with_covariance.pose
+        pose = self.current_state.pose.pose
         self.current_position.x = pose.position.x
         self.current_position.y = pose.position.y
         self.current_position.z = pose.position.z
 
         # store the linear velocities
-        twist = self.current_state.twist_with_covariance.twist
+        twist = self.current_state.twist.twist
         self.current_velocity.x = twist.linear.x
         self.current_velocity.y = twist.linear.y
         self.current_velocity.z = twist.linear.z
@@ -359,7 +360,7 @@ def main(ControllerClass):
 
     # Subscribers
     #############
-    rospy.Subscriber('/pidrone/state', State, pid_controller.current_state_callback)
+    rospy.Subscriber('/pidrone/state', Odometry, pid_controller.current_state_callback)
     rospy.Subscriber('/pidrone/desired/pose', Pose, pid_controller.desired_pose_callback)
     rospy.Subscriber('/pidrone/desired/twist', Twist, pid_controller.desired_twist_callback)
     rospy.Subscriber('/pidrone/mode', Mode, pid_controller.current_mode_callback)
@@ -400,7 +401,7 @@ def main(ControllerClass):
 
                 # Safety check to ensure drone does not fly too high
                 #height_safety_here
-                if (pid_controller.current_state.pose_with_covariance.pose.position.z >
+                if (pid_controller.current_state.pose.pose.position.z >
                 max_range):
                     fly_command = cmds.disarm_cmd
                     print("\n disarming because drone is too high \n")

@@ -6,7 +6,7 @@ import os
 import rospy
 import signal
 import numpy as np
-from pidrone_pkg.msg import State
+from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Range, Imu
 from geometry_msgs.msg import PoseStamped, TwistStamped
 from std_msgs.msg import Header, Bool, Empty
@@ -37,7 +37,7 @@ class EMAStateEstimator(object):
 
         self.state_topic_str = '/pidrone/state/ema'
 
-        self.state = State()
+        self.state = Odometry()
         self.state.header = header
 
         # store whether twist and range data have been received
@@ -72,10 +72,10 @@ class EMAStateEstimator(object):
         """ Reset the current pose of the drone except for the z postion """
         self.state.header.stamp = rospy.Time.now()
         print 'Resetting position in x and y and orientation'
-        self.state.pose_with_covariance.pose.position.x = 0
-        self.state.pose_with_covariance.pose.position.y = 0
+        self.state.pose.pose.position.x = 0
+        self.state.pose.pose.position.y = 0
         # reset the orientation
-        self.state.pose_with_covariance.pose.orientation = PoseStamped().pose.orientation
+        self.state.pose.pose.orientation = PoseStamped().pose.orientation
 
     def pose_callback(self, data):
         """ Update the pose of the drone based on the translations published
@@ -101,7 +101,7 @@ class EMAStateEstimator(object):
         integrating if the pose is based off the previous image
         """
         # last position of the drone
-        last_position = self.state.pose_with_covariance.pose.position
+        last_position = self.state.pose.pose.position
         # raw measured translations and rotation by analyze_transform
         position_reading = pose.position
         # constant used for the EMA filter
@@ -110,22 +110,22 @@ class EMAStateEstimator(object):
         smoothed_x = (1.0 - alpha) * last_position.x + alpha * position_reading.x
         smoothed_y = (1.0 - alpha) * last_position.y + alpha * position_reading.y
 
-        self.state.pose_with_covariance.pose.position.x = smoothed_x
-        self.state.pose_with_covariance.pose.position.y = smoothed_y
+        self.state.pose.pose.position.x = smoothed_x
+        self.state.pose.pose.position.y = smoothed_y
 
     def imu_callback(self, data):
         """ Update the attitude of the drone """
-        self.state.pose_with_covariance.pose.orientation = data.orientation
-        self.state.twist_with_covariance.twist.angular = data.angular_velocity
+        self.state.pose.pose.orientation = data.orientation
+        self.state.twist.twist.angular = data.angular_velocity
 
     def filter_twist(self, twist):
         """ Run an ema filter on the velocity data and update the state velocity """
         # current position of the drone
-        altitude = self.state.pose_with_covariance.pose.position.z
+        altitude = self.state.pose.pose.position.z
         # measured planar velocities of the drone
         new_vel = twist.linear
         # the current planar velocities of the drone
-        velocity = self.state.twist_with_covariance.twist.linear
+        velocity = self.state.twist.twist.linear
         # update the angular velocity coefficients to account for the angular
         # motion of the drone
         self.calc_angle_comp_values()
@@ -133,7 +133,7 @@ class EMAStateEstimator(object):
         alpha = 0.4
         velocity.x = self.near_zero((1.0 - alpha) * velocity.x + alpha * (new_vel.x - self.mw_angle_comp_x))
         velocity.y = self.near_zero((1.0 - alpha) * velocity.y + alpha * (new_vel.y - self.mw_angle_comp_y))
-        self.state.twist_with_covariance.twist.linear = velocity
+        self.state.twist.twist.linear = velocity
 
     def filter_range(self, range_reading):
         """ Smooth the range reading using and ema filter """
@@ -144,23 +144,23 @@ class EMAStateEstimator(object):
         # the z-position of the drone which is calculated by multiplying the
         # the range reading by the cosines of the roll and pitch
         curr_altitude = range_reading * np.cos(r) * np.cos(p)
-        prev_altitude = self.state.pose_with_covariance.pose.position.z
+        prev_altitude = self.state.pose.pose.position.z
         # use an ema filter to smoothe the range reading
         smoothed_altitude= (1.0 - alpha) * curr_altitude + alpha * prev_altitude
         # ensure that the range value is between 0 and 0.55 m
         smoothed_altitude = max(0, min(smoothed_altitude, self.max_range*0.8))
         # update the current z position
-        self.state.pose_with_covariance.pose.position.z = smoothed_altitude
+        self.state.pose.pose.position.z = smoothed_altitude
 
 
     # Helper Methods:
     #################
     def get_r_p_y(self):
         """ Return the roll, pitch, and yaw from the orientation quaternion """
-        x = self.state.pose_with_covariance.pose.orientation.x
-        y = self.state.pose_with_covariance.pose.orientation.y
-        z = self.state.pose_with_covariance.pose.orientation.z
-        w = self.state.pose_with_covariance.pose.orientation.w
+        x = self.state.pose.pose.orientation.x
+        y = self.state.pose.pose.orientation.y
+        z = self.state.pose.pose.orientation.z
+        w = self.state.pose.pose.orientation.w
         quaternion = (x,y,z,w)
         r,p,y = tf.transformations.euler_from_quaternion(quaternion)
         return r,p,y
@@ -168,8 +168,8 @@ class EMAStateEstimator(object):
     def calc_angle_comp_values(self):
         """ Calculates angle compensation values to account for the tilt of the
         drone when calculating the velocity error """
-        altitude = self.state.pose_with_covariance.pose.position.z
-        angular_velocities = self.state.twist_with_covariance.twist.angular
+        altitude = self.state.pose.pose.position.z
+        angular_velocities = self.state.twist.twist.angular
         # v = w * r  :  (linear velocity = angular velocity * radius)
         self.mw_angle_comp_x = angular_velocities.x * altitude * self.mw_angle_coeff
         self.mw_angle_comp_y = angular_velocities.y * altitude * self.mw_angle_coeff
@@ -201,7 +201,7 @@ def main():
 
     # Publishers
     ############
-    statepub = rospy.Publisher(state_estimator.state_topic_str, State,
+    statepub = rospy.Publisher(state_estimator.state_topic_str, Odometry,
                                queue_size=1, tcp_nodelay=False)
 
     # Subscribers

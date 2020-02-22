@@ -5,7 +5,7 @@ from sensor_msgs.msg import Joy
 import numpy as np
 import os
 from geometry_msgs.msg import Pose, Twist
-from pidrone_pkg.msg import Mode, RC, State
+from pidrone_pkg.msg import Mode, RC
 from std_msgs.msg import Float32, Empty, Bool
 
 z_total_steps = 24

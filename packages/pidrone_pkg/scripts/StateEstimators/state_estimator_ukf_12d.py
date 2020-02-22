@@ -4,7 +4,7 @@
 import rospy
 import tf
 from sensor_msgs.msg import Imu, Range
-from pidrone_pkg.msg import State
+from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TwistStamped
 from std_msgs.msg import Header
 
@@ -97,7 +97,7 @@ class UKFStateEstimator12D(object):
         #       localization
         
         # Create the publisher to publish state estimates
-        self.state_pub = rospy.Publisher('/pidrone/state/ukf_12d', State,
+        self.state_pub = rospy.Publisher('/pidrone/state/ukf_12d', Odometry,
                                          queue_size=1, tcp_nodelay=False)
         
     def initialize_ukf(self):
@@ -426,7 +426,7 @@ class UKFStateEstimator12D(object):
             - PoseWithCovariance
             - TwistWithCovariance
         '''
-        state_msg = State()
+        state_msg = Odometry()
         state_msg.header.stamp.secs = self.last_time_secs
         state_msg.header.stamp.nsecs = self.last_time_nsecs
         state_msg.header.frame_id = 'global'
@@ -434,31 +434,31 @@ class UKFStateEstimator12D(object):
         quaternion = self.get_quaternion_from_ukf_rpy()
         
         # Get the current state estimate from self.ukf.x
-        state_msg.pose_with_covariance.pose.position.x = self.ukf.x[0]
-        state_msg.pose_with_covariance.pose.position.y = self.ukf.x[1]
-        state_msg.pose_with_covariance.pose.position.z = self.ukf.x[2]
-        state_msg.twist_with_covariance.twist.linear.x = self.ukf.x[3]
-        state_msg.twist_with_covariance.twist.linear.y = self.ukf.x[4]
-        state_msg.twist_with_covariance.twist.linear.z = self.ukf.x[5]
-        state_msg.pose_with_covariance.pose.orientation.x = quaternion[0]
-        state_msg.pose_with_covariance.pose.orientation.y = quaternion[1]
-        state_msg.pose_with_covariance.pose.orientation.z = quaternion[2]
-        state_msg.pose_with_covariance.pose.orientation.w = quaternion[3]
+        state_msg.pose.pose.position.x = self.ukf.x[0]
+        state_msg.pose.pose.position.y = self.ukf.x[1]
+        state_msg.pose.pose.position.z = self.ukf.x[2]
+        state_msg.twist.twist.linear.x = self.ukf.x[3]
+        state_msg.twist.twist.linear.y = self.ukf.x[4]
+        state_msg.twist.twist.linear.z = self.ukf.x[5]
+        state_msg.pose.pose.orientation.x = quaternion[0]
+        state_msg.pose.pose.orientation.y = quaternion[1]
+        state_msg.pose.pose.orientation.z = quaternion[2]
+        state_msg.pose.pose.orientation.w = quaternion[3]
         
         # TODO: Look into RPY velocities versus angular velocities about x, y, z axes?
         # For the time being, using Euler rates:
-        state_msg.twist_with_covariance.twist.angular.x = self.ukf.x[9]    # roll rate
-        state_msg.twist_with_covariance.twist.angular.y = self.ukf.x[10]   # pitch rate
-        state_msg.twist_with_covariance.twist.angular.z = self.ukf.x[11]   # yaw rate
+        state_msg.twist.twist.angular.x = self.ukf.x[9]    # roll rate
+        state_msg.twist.twist.angular.y = self.ukf.x[10]   # pitch rate
+        state_msg.twist.twist.angular.z = self.ukf.x[11]   # yaw rate
         
         # Extract the relevant covariances from self.ukf.P, make into 36-element
         # arrays, in row-major order, according to ROS msg docs
         P = self.ukf.P
-        state_msg.pose_with_covariance.covariance = np.concatenate(
+        state_msg.pose.covariance = np.concatenate(
             (P[0, 0:3], P[0, 6:9], P[1, 0:3], P[1, 6:9], P[2, 0:3], P[2, 6:9],
              P[6, 0:3], P[6, 6:9], P[7, 0:3], P[7, 6:9], P[8, 0:3], P[8, 6:9]),
              axis=0)
-        state_msg.twist_with_covariance.covariance = np.concatenate(
+        state_msg.twist.covariance = np.concatenate(
             (P[3, 3:6], P[3, 9:12], P[4, 3:6], P[4, 9:12], P[5, 3:6], P[5, 9:12],
              P[9, 3:6], P[9, 9:12], P[10, 3:6], P[10, 9:12], P[11, 3:6], P[11, 9:12]),
              axis=0)

@@ -2,7 +2,8 @@
 
 import argparse
 import rospy
-from pidrone_pkg.msg import State, StateGroundTruth
+from nav_msgs.msg import Odometry
+from pidrone_pkg.msg import StateGroundTruth
 from pidrone_pkg.msg import UkfStats
 import subprocess
 import os
@@ -34,7 +35,7 @@ class StateEstimator(object):
     def __init__(self, primary, others, ir_throttled=False, imu_throttled=False,
                  optical_flow_throttled=False, camera_pose_throttled=False,
                  sdim=1, student_ukf=False, ir_var=None, loop_hz=None):
-        self.state_msg = State()
+        self.state_msg = Odometry()
         
         self.ir_throttled = ir_throttled
         self.imu_throttled = imu_throttled
@@ -93,7 +94,7 @@ class StateEstimator(object):
         self.mocap_topic = '/pidrone/state/ground_truth'
         self.simulator_topic = '/pidrone/state/ground_truth'
 
-        self.state_pub = rospy.Publisher('/pidrone/state', State, queue_size=1,
+        self.state_pub = rospy.Publisher('/pidrone/state', Odometry, queue_size=1,
                                          tcp_nodelay=False)
 
         self.setup_ukf_with_ground_truth()
@@ -116,18 +117,18 @@ class StateEstimator(object):
             # velocity estimates.
             process_cmds.append(self.process_cmds_dict['ema'])
             self.ema_state_msg = State()
-            rospy.Subscriber(self.ema_topic, State, self.ema_helper_callback)
-            rospy.Subscriber(self.ukf_topics[2], State, self.state_callback)
+            rospy.Subscriber(self.ema_topic, Odometry, self.ema_helper_callback)
+            rospy.Subscriber(self.ukf_topics[2], Odometry, self.state_callback)
         elif self.primary_estimator == 'ukf7d':
-            rospy.Subscriber(self.ukf_topics[7], State, self.state_callback)
+            rospy.Subscriber(self.ukf_topics[7], Odometry, self.state_callback)
         elif self.primary_estimator == 'ukf12d':
-            rospy.Subscriber(self.ukf_topics[12], State, self.state_callback)
+            rospy.Subscriber(self.ukf_topics[12], Odometry, self.state_callback)
         elif self.primary_estimator == 'ema':
-            rospy.Subscriber(self.ema_topic, State, self.state_callback)
+            rospy.Subscriber(self.ema_topic, Odometry, self.state_callback)
         elif self.primary_estimator == 'mocap':
-            rospy.Subscriber(self.mocap_topic, State, self.state_callback)
+            rospy.Subscriber(self.mocap_topic, Odometry, self.state_callback)
         elif self.primary_estimator == 'simulator':
-            rospy.Subscriber(self.simulator_topic, State, self.state_callback)
+            rospy.Subscriber(self.simulator_topic, Odometry, self.state_callback)
         
         # Set up the process commands for the non-primary estimators
         for other_estimator in self.other_estimators:
@@ -187,11 +188,11 @@ class StateEstimator(object):
                     # be False
                     ukf_to_use = possible_ukfs[0]
             if ukf_to_use == 'ukf2d':
-                rospy.Subscriber(self.ukf_topics[2], State, self.ukf_analytics_callback)
+                rospy.Subscriber(self.ukf_topics[2], Odometry, self.ukf_analytics_callback)
             elif ukf_to_use == 'ukf7d':
-                rospy.Subscriber(self.ukf_topics[7], State, self.ukf_analytics_callback)
+                rospy.Subscriber(self.ukf_topics[7], Odometry, self.ukf_analytics_callback)
             elif ukf_to_use == 'ukf12d':
-                rospy.Subscriber(self.ukf_topics[12], State, self.ukf_analytics_callback)
+                rospy.Subscriber(self.ukf_topics[12], Odometry, self.ukf_analytics_callback)
             for estimator in self.estimators:
                 if estimator == 'simulator':
                     topic = self.simulator_topic
@@ -219,39 +220,39 @@ class StateEstimator(object):
         """
         Callback that handles the primary estimator republishing.
         """
-        # TODO: Consider creating a new State message rather than modifying just
-        #       one State message
+        # TODO: Consider creating a new Odometry message rather than modifying just
+        #       one Odometry message
         self.state_msg.header.stamp = rospy.Time.now()
         if self.primary_estimator == 'ukf2d':
             # Use EMA data for x and y positions and velocities
-            x = self.ema_state_msg.pose_with_covariance.pose.position.x
-            y = self.ema_state_msg.pose_with_covariance.pose.position.y
-            vel_x = self.ema_state_msg.twist_with_covariance.twist.linear.x
-            vel_y = self.ema_state_msg.twist_with_covariance.twist.linear.y
+            x = self.ema_state_msg.pose.pose.position.x
+            y = self.ema_state_msg.pose.pose.position.y
+            vel_x = self.ema_state_msg.twist.twist.linear.x
+            vel_y = self.ema_state_msg.twist.twist.linear.y
         else:
             # Use primary_estimator data for x and y positions and velocities
-            x = msg.pose_with_covariance.pose.position.x
-            y = msg.pose_with_covariance.pose.position.y
-            vel_x = msg.twist_with_covariance.twist.linear.x
-            vel_y = msg.twist_with_covariance.twist.linear.y
+            x = msg.pose.pose.position.x
+            y = msg.pose.pose.position.y
+            vel_x = msg.twist.twist.linear.x
+            vel_y = msg.twist.twist.linear.y
         
-        z = msg.pose_with_covariance.pose.position.z
-        vel_z = msg.twist_with_covariance.twist.linear.z
-        orientation = msg.pose_with_covariance.pose.orientation
-        vel_angular = msg.twist_with_covariance.twist.angular
+        z = msg.pose.pose.position.z
+        vel_z = msg.twist.twist.linear.z
+        orientation = msg.pose.pose.orientation
+        vel_angular = msg.twist.twist.angular
         
-        self.state_msg.pose_with_covariance.pose.position.x = x
-        self.state_msg.pose_with_covariance.pose.position.y = y
-        self.state_msg.pose_with_covariance.pose.position.z = z
-        self.state_msg.pose_with_covariance.pose.orientation = orientation
-        self.state_msg.twist_with_covariance.twist.linear.x = vel_x
-        self.state_msg.twist_with_covariance.twist.linear.y = vel_y
-        self.state_msg.twist_with_covariance.twist.linear.z = vel_z
-        self.state_msg.twist_with_covariance.twist.angular = vel_angular
+        self.state_msg.pose.pose.position.x = x
+        self.state_msg.pose.pose.position.y = y
+        self.state_msg.pose.pose.position.z = z
+        self.state_msg.pose.pose.orientation = orientation
+        self.state_msg.twist.twist.linear.x = vel_x
+        self.state_msg.twist.twist.linear.y = vel_y
+        self.state_msg.twist.twist.linear.z = vel_z
+        self.state_msg.twist.twist.angular = vel_angular
         
         # Include covariances
-        self.state_msg.pose_with_covariance.covariance = msg.pose_with_covariance.covariance
-        self.state_msg.twist_with_covariance.covariance = msg.twist_with_covariance.covariance
+        self.state_msg.pose.covariance = msg.pose.covariance
+        self.state_msg.twist.covariance = msg.twist.covariance
         
         self.state_pub.publish(self.state_msg)
         
@@ -260,18 +261,18 @@ class StateEstimator(object):
         When the primary estimator is the 2D UKF, populate self.ema_state_msg
         in this callback.
         """
-        self.ema_state_msg.pose_with_covariance.pose.position.x = msg.pose_with_covariance.pose.position.x
-        self.ema_state_msg.pose_with_covariance.pose.position.y = msg.pose_with_covariance.pose.position.y
-        self.ema_state_msg.twist_with_covariance.twist.linear.x = msg.twist_with_covariance.twist.linear.x
-        self.ema_state_msg.twist_with_covariance.twist.linear.y = msg.twist_with_covariance.twist.linear.y
+        self.ema_state_msg.pose.pose.position.x = msg.pose.pose.position.x
+        self.ema_state_msg.pose.pose.position.y = msg.pose.pose.position.y
+        self.ema_state_msg.twist.twist.linear.x = msg.twist.twist.linear.x
+        self.ema_state_msg.twist.twist.linear.y = msg.twist.twist.linear.y
         
     def ukf_analytics_callback(self, msg):
-        self.last_ukf_height = msg.pose_with_covariance.pose.position.z
+        self.last_ukf_height = msg.pose.pose.position.z
         if self.last_ground_truth_height is not None:
             stats_msg = UkfStats()
             stats_msg.header.stamp = rospy.Time.now()
             stats_msg.error = self.last_ukf_height - self.last_ground_truth_height
-            stats_msg.stddev = (msg.pose_with_covariance.covariance[14])**0.5
+            stats_msg.stddev = (msg.pose.covariance[14])**0.5
             self.ukf_stats_pub.publish(stats_msg)
         
     def ground_truth_analytics_callback(self, msg):

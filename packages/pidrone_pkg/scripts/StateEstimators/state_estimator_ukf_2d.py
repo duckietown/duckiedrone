@@ -3,7 +3,7 @@
 # ROS imports
 import rospy
 from sensor_msgs.msg import Imu, Range
-from pidrone_pkg.msg import State
+from nav_msgs.msg import Odometry
 
 # UKF imports
 # The matplotlib imports and the matplotlib.use('Pdf') line make it so that the
@@ -82,7 +82,7 @@ class UKFStateEstimator2D(object):
         rospy.Subscriber(self.ir_topic_str, Range, self.ir_data_callback)
         
         # Create the publisher to publish state estimates
-        self.state_pub = rospy.Publisher('/pidrone/state/ukf_2d', State, queue_size=1,
+        self.state_pub = rospy.Publisher('/pidrone/state/ukf_2d', Odometry, queue_size=1,
                                          tcp_nodelay=False)
         
     def initialize_ukf(self):
@@ -252,27 +252,27 @@ class UKFStateEstimator2D(object):
         2D UKF does not track information on the entire state space of the
         drone.
         """
-        state_msg = State()
+        state_msg = Odometry()
         state_msg.header.stamp.secs = self.last_time_secs
         state_msg.header.stamp.nsecs = self.last_time_nsecs
         state_msg.header.frame_id = 'global'
         
         # Get the current state estimate from self.ukf.x
-        state_msg.pose_with_covariance.pose.position.z = self.ukf.x[0]
-        state_msg.twist_with_covariance.twist.linear.z = self.ukf.x[1]
+        state_msg.pose.pose.position.z = self.ukf.x[0]
+        state_msg.twist.twist.linear.z = self.ukf.x[1]
         
         # Fill the rest of the message with NaN
-        state_msg.pose_with_covariance.pose.position.x = np.nan
-        state_msg.pose_with_covariance.pose.position.y = np.nan
-        state_msg.pose_with_covariance.pose.orientation.x = np.nan
-        state_msg.pose_with_covariance.pose.orientation.y = np.nan
-        state_msg.pose_with_covariance.pose.orientation.z = np.nan
-        state_msg.pose_with_covariance.pose.orientation.w = np.nan
-        state_msg.twist_with_covariance.twist.linear.x = np.nan
-        state_msg.twist_with_covariance.twist.linear.y = np.nan
-        state_msg.twist_with_covariance.twist.angular.x = np.nan
-        state_msg.twist_with_covariance.twist.angular.y = np.nan
-        state_msg.twist_with_covariance.twist.angular.z = np.nan
+        state_msg.pose.pose.position.x = np.nan
+        state_msg.pose.pose.position.y = np.nan
+        state_msg.pose.pose.orientation.x = np.nan
+        state_msg.pose.pose.orientation.y = np.nan
+        state_msg.pose.pose.orientation.z = np.nan
+        state_msg.pose.pose.orientation.w = np.nan
+        state_msg.twist.twist.linear.x = np.nan
+        state_msg.twist.twist.linear.y = np.nan
+        state_msg.twist.twist.angular.x = np.nan
+        state_msg.twist.twist.angular.y = np.nan
+        state_msg.twist.twist.angular.z = np.nan
         
         # Prepare covariance matrices
         # 36-element array, in a row-major order, according to ROS msg docs
@@ -282,8 +282,8 @@ class UKFStateEstimator2D(object):
         twist_cov_mat[14] = self.ukf.P[1, 1]  # z velocity variance
         
         # Add covariances to message
-        state_msg.pose_with_covariance.covariance = pose_cov_mat
-        state_msg.twist_with_covariance.covariance = twist_cov_mat
+        state_msg.pose.covariance = pose_cov_mat
+        state_msg.twist.covariance = twist_cov_mat
         
         self.state_pub.publish(state_msg)
 
