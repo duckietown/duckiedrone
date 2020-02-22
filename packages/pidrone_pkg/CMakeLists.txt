@@ -9,6 +9,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   geometry_msgs
   std_msgs
+  nav_msgs
+  sensor_msgs
   message_generation
 )
 
@@ -50,7 +52,6 @@ add_message_files(
   RC.msg
   Mode.msg
   Battery.msg
-  State.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -72,6 +73,8 @@ generate_messages(
   DEPENDENCIES
   geometry_msgs
   std_msgs
+  nav_msgs
+  sensor_msgs
   geometry_msgs
 )
 catkin_package(CATKIN_DEPENDS message_runtime)

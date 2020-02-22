@@ -8,12 +8,13 @@ import rospkg
 import signal
 import numpy as np
 import command_values as cmds
-from sensor_msgs.msg import Imu
+from sensor_msgs.msg import Imu, BatteryState
 from h2rMultiWii import MultiWii
 from serial import SerialException
 from std_msgs.msg import Header, Empty
 from geometry_msgs.msg import Quaternion
-from pidrone_pkg.msg import Battery, Mode, RC, State
+from nav_msgs.msg import Odometry
+from pidrone_pkg.msg import Battery, Mode, RC
 import os
 
 
@@ -64,6 +65,7 @@ class FlightController(object):
 
         # Initialize the Battery Message
         ################################
+        self.battery_message_new = BatteryState()
         self.battery_message = Battery()
         self.battery_message.vbat = None
         self.battery_message.amperage = None
@@ -329,7 +331,7 @@ def main():
     rospy.Subscriber("/pidrone/heartbeat/infrared", Empty, fc.heartbeat_infrared_callback)
     rospy.Subscriber("/pidrone/heartbeat/web_interface", Empty, fc.heartbeat_web_interface_callback)
     rospy.Subscriber("/pidrone/heartbeat/pid_controller", Empty, fc.heartbeat_pid_controller_callback)
-    rospy.Subscriber("/pidrone/state", State, fc.heartbeat_state_estimator_callback)
+    rospy.Subscriber("/pidrone/state", Odometry, fc.heartbeat_state_estimator_callback)
 
 
 
