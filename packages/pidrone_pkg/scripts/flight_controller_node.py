@@ -14,7 +14,7 @@ from serial import SerialException
 from std_msgs.msg import Header, Empty
 from geometry_msgs.msg import Quaternion
 from nav_msgs.msg import Odometry
-from pidrone_pkg.msg import Battery, Mode, RC
+from pidrone_pkg.msg import Mode, RC
 import os
 
 
@@ -65,10 +65,9 @@ class FlightController(object):
 
         # Initialize the Battery Message
         ################################
-        self.battery_message_new = BatteryState()
-        self.battery_message = Battery()
-        self.battery_message.vbat = None
-        self.battery_message.amperage = None
+        self.battery_message = BatteryState()
+        self.battery_message.voltage = None
+        self.battery_message.current = None
         # Adjust this based on how low the battery should discharge
         self.minimum_voltage = 4.5
 
@@ -193,11 +192,11 @@ class FlightController(object):
         """
         Compute the ROS battery message by reading data from the board.
         """
-        # extract vbat, amperage
+        # extract voltage, current
         self.board.getData(MultiWii.ANALOG)
         # Update Battery message:
-        self.battery_message.vbat = self.board.analog['vbat'] * 0.10
-        self.battery_message.amperage = self.board.analog['amperage']
+        self.battery_message.voltage = self.board.analog['vbat'] * 0.10
+        self.battery_message.current = self.board.analog['amperage']
 
     def update_command(self):
         ''' Set command values if the mode is ARMED or DISARMED '''
@@ -273,7 +272,7 @@ class FlightController(object):
         """
         curr_time = rospy.Time.now()
         disarm = False
-        if self.battery_message.vbat != None and self.battery_message.vbat < self.minimum_voltage:
+        if self.battery_message.voltage != None and self.battery_message.voltage < self.minimum_voltage:
             print('\nSafety Failure: low battery\n')
             disarm = True
         if curr_time - self.heartbeat_web_interface > rospy.Duration.from_sec(3):
@@ -314,7 +313,7 @@ def main():
     # Publishers
     ###########
     imupub = rospy.Publisher('/pidrone/imu', Imu, queue_size=1, tcp_nodelay=False)
-    batpub = rospy.Publisher('/pidrone/battery', Battery, queue_size=1, tcp_nodelay=False)
+    batpub = rospy.Publisher('/pidrone/battery', BatteryState, queue_size=1, tcp_nodelay=False)
     fc.modepub = rospy.Publisher('/pidrone/mode', Mode, queue_size=1, tcp_nodelay=False)
     print 'Publishing:'
     print '/pidrone/imu'
