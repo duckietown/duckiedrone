@@ -1,18 +1,51 @@
 from __future__ import division
 import rospy
 import numpy as np
-import picamera.array
+# import picamera.array
 from pidrone_pkg.msg import State
 from geometry_msgs.msg import TwistStamped
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
 
 
-class AnalyzeFlow(picamera.array.PiMotionAnalysis):
+class AnalyzeFlow():
     ''' A class used for real-time motion analysis of optical flow vectors to
     obtain the planar and yaw velocities of the drone.
 
     For more information, read the following:
     http://picamera.readthedocs.io/en/release-1.10/api_array.html#picamera.array.PiMotionAnalysis
     '''
+
+    def __init__(self, camera_wh):
+        # self.image_pub = rospy.Publisher("/duckiedrone2/camera_node/image_pub_test", Image, queue_size=1)
+        self.bridge = CvBridge()
+
+        rospy.Subscriber("/duckiedrone2/camera_node/image/raw", Image, self.callback)
+
+        self.camera_wh = camera_wh
+
+        self.setup(camera_wh)
+
+        self.cols = None
+        self.rows = None
+
+        self.altitude = 2
+
+    def callback(self, data):
+        try:
+            cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+        except CvBridgeError as e:
+            print(e)
+
+        # rows, cols, channels) = cv_image.shape
+        # print(cv_image.shape)
+
+        # try:
+        #     self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, "bgr8"))
+        # except CvBridgeError as e:
+        #     print(e)
+
+        self.write(cv_image)
 
     def setup(self, camera_wh):
         ''' Initialize the instance variables '''
@@ -22,14 +55,23 @@ class AnalyzeFlow(picamera.array.PiMotionAnalysis):
         self.flow_scale = .165
         self.flow_coeff = 100 * self.flow_scale / self.max_flow # (multiply by 100 for cm to m conversion)
 
-        self.altitude = 0.0
+        # self.altitude = 0.0
+
 
         # ROS setup:
         ############
         # Publisher:
-        self.twistpub = rospy.Publisher('/pidrone/picamera/twist', TwistStamped, queue_size=1)
+        self.twistpub = rospy.Publisher('/duckiedrone2/camera_node/twist', TwistStamped, queue_size=1)
         # Subscriber:
         rospy.Subscriber("/pidrone/state", State, self.state_callback)
+
+    def write(self, b):
+        if self.cols is None:
+            width, height = self.camera_wh
+            self.cols = ((width + 15) // 16) + 1
+            self.rows = (height + 15) // 16
+        self.analyse(b)
+        return len(b)
 
     def analyse(self, a):
         ''' Analyze the frame, calculate the motion vectors, and publish the
@@ -39,8 +81,10 @@ class AnalyzeFlow(picamera.array.PiMotionAnalysis):
             PiMotionAnalysis api
         '''
         # signed 1-byte values
-        x = a['x']
-        y = a['y']
+        x = a[0]
+        y = a[1]
+
+        # print(a.shape)
 
         # calculate the planar and yaw motions
         x_motion = np.sum(x) * self.flow_coeff * self.altitude
