@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="veh" doc="Name of vehicle. ex megaman"/>
+	<arg name="robot_type" default="duckiebot"  
+		doc="The type of the robot: should be duckiebot, 
+		watchtower, duckiedrone or traffic_light"/>
+
+	<arg name="rangefinder" 
+		doc="rangefinder type: lidar or infrared"/>
+	<arg name="pkg_name" value="rangefinder"/>
+
+	<rosparam command="load" ns="$(arg veh)"
+		file="$(find rangefinder)/config/$(arg rangefinder).yaml"/>
+
+  <group if="$(eval arg('rangefinder') == 'lidar')" ns="$(arg veh)">
+
+	  <node pkg="$(arg pkg_name)" type="lidar_sensor_pub.py" 
+		  name="lidar_sensor_pub1" output="screen">
+		  <param name="i2c_channel_id" value="0" /></node>
+
+          <node pkg="$(arg pkg_name)" type="lidar_sensor_pub.py" 
+		  name="lidar_sensor_pub2">
+		  <param name="i2c_channel_id" value="1" /></node>
+
+	  <node pkg="$(arg pkg_name)" type="lidar_sensor_pub.py" 
+		  name="lidar_sensor_pub3">
+		  <param name="i2c_channel_id" value="2" /></node>
+
+	  <node pkg="$(arg pkg_name)" type="lidar_sensor_pub.py" 
+		  name="lidar_sensor_pub4">
+		  <param name="i2c_channel_id" value="3" /></node>
+
+	  <node pkg="$(arg pkg_name)" type="lidar_smoothing.py" 
+		  name="lidar_smoothing" output="screen"></node>
+  </group>
+
+
+  <group if="$(eval arg('rangefinder') == 'infrared')" ns="$(arg veh)">
+	  <node pkg="$(arg pkg_name)" type="infrared_pub.py" 
+		  name="infrared_pub" output="screen"></node>
+  </group>
+
+</launch>

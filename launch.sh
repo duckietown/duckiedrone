@@ -24,7 +24,7 @@ i2c_address4="0x33"
 # based on the error code either the lidar or the infrared node will be run
 if [ "${DEBUG}" = "1" ]; then echo "Rangefinder setup..."; fi
 set +e
-python2 $CODE_DIR/packages/pidrone_pkg/scripts/rangefinder_setup.py \
+python2 $CODE_DIR/packages/rangefinder/src/rangefinder_setup.py \
         --channels \
         $i2c_address1 $i2c_address2 $i2c_address3 \
         $i2c_address4
@@ -56,13 +56,16 @@ if [ "${DEBUG}" = "1" ]; then echo rangefinderlaunch $rangefinderlaunch; fi
 
 #Calibrate Accelerometer on startup (drone must be level)
 if [ "${DEBUG}" = "1" ]; then echo "Calibrating Accelerometer..."; fi
-python2 $CODE_DIR/packages/pidrone_pkg/scripts/calibrateAcc.py
+python2 $CODE_DIR/packages/flight_controller/src/calibrateAcc.py
 if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 
 
 
 #launching app
-dt_exec roslaunch pidrone_pkg drone.launch rangefinder:=$rangefinderlaunch \
+dt_exec roslaunch pidrone_pkg all_drivers.launch \
+        veh:=$VEHICLE_NAME \
+        robot_type:=$ROBOT_TYPE \
+        rangefinder:=$rangefinderlaunch \
 	maxrange:=$maxrange \
 	i2c1:=$i2c_address1 i2c2:=$i2c_address2 i2c3:=$i2c_address3 \
 	i2c4:=$i2c_address4

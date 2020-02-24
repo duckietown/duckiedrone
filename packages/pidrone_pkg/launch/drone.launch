@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <launch>
+	<arg name="veh" doc="Name of vehicle. ex megaman"/>
+	<arg name="robot_type" default="duckiebot"  
+		doc="The type of the robot: should be duckiebot, 
+		watchtower, duckiedrone or traffic_light"/>
+
 	<arg name="rangefinder" 
 		doc="rangefinder type: lidar or infrared"/>
 	<arg name="maxrange"
