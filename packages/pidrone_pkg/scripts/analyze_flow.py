@@ -29,8 +29,6 @@ class AnalyzeFlow():
         self.cols = None
         self.rows = None
 
-        self.altitude = 2
-
     def callback(self, data):
         try:
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
