@@ -31,7 +31,7 @@
 		  <param name="i2c_channel_id" value="3" /></node>
 
 	  <node pkg="$(arg pkg_name)" type="lidar_smoothing.py" 
-		  name="lidar_smoothing" output="screen"></node>
+		  name="lidar_smoothing"></node>
   </group>
 
 
