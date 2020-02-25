@@ -32,9 +32,14 @@ def main(i2c_channels):
     GPIO.setwarnings(False)
 
 
+
+#these i2c_addresses 30,31,32,33 are arbitrary
+#but they must match the ones that you reopen
+#when you spin up the lidar nodes
     GPIO.setmode(GPIO.BCM)
     mode = GPIO.getmode()
     print(mode)
+
     GPIO.setup([4,17,18,27], GPIO.OUT)
     GPIO.setup(4, GPIO.OUT)
     GPIO.setup(17, GPIO.OUT)
@@ -57,55 +62,52 @@ def main(i2c_channels):
     #then innit the first one
 
 
-    #these i2c_addresses 30,31,32,33 are arbitrary
-    #but they must match the ones that you reopen
-    #when you spin up the lidar nodes
+    GPIO.output(4, GPIO.HIGH)
     try:
-        GPIO.output(4, GPIO.HIGH)
-        tof1 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=29)
+        tof1 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x29)
         tof1.open()
-        tof1.change_address(i2c_channels[0])
+        tof1.change_address(0x30)
 
-        tof1 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c_channels[0])
+        tof1 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x30)
         tof1.open()
         number_lidar_sensors_connected += 1
     except RuntimeError as e:
-        print "Exeption for lidar sensor 1"
+        print "Exeption for lidar sensor 4"
         print e
-    
 
+
+
+    GPIO.output(17, GPIO.HIGH)
     try:
-        GPIO.output(17, GPIO.HIGH)
         tof2 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x29)
         tof2.open()
-        tof2.change_address(i2c_channels[1])
-        tof2 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c_channels[1])
+        tof2.change_address(0x31)
+        tof2 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x31)
         tof2.open()
         number_lidar_sensors_connected += 1
     except RuntimeError as e:
-        print "Exeption for lidar sensor 2"
+        print "Exeption for lidar sensor 4"
         print e
-    
 
+
+    GPIO.setup(18, GPIO.HIGH)
     try:
-        GPIO.setup(18, GPIO.HIGH)
         tof3 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x29)
         tof3.open()
-        tof3.change_address(i2c_channels[2])
-        tof3 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c_channels[2])
+        tof3.change_address(0x32)
+        tof3 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x32)
         tof3.open()
         number_lidar_sensors_connected += 1
     except RuntimeError as e:
-        print "Exeption for lidar sensor 3"
+        print "Exeption for lidar sensor 4"
         print e
-    
 
+    GPIO.setup(27, GPIO.HIGH)
     try:
-        GPIO.setup(27, GPIO.HIGH)
         tof4 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x29)
         tof4.open()
-        tof4.change_address(i2c_channels[3])
-        tof4 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c_channels[3])
+        tof4.change_address(0x33)
+        tof4 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x33)
         tof4.open()
         number_lidar_sensors_connected += 1
     except RuntimeError as e:
