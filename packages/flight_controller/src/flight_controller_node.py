@@ -312,25 +312,26 @@ def main():
 
     # Publishers
     ###########
-    imupub = rospy.Publisher('/pidrone/imu', Imu, queue_size=1, tcp_nodelay=False)
-    batpub = rospy.Publisher('/pidrone/battery', BatteryState, queue_size=1, tcp_nodelay=False)
-    fc.modepub = rospy.Publisher('/pidrone/mode', Mode, queue_size=1, tcp_nodelay=False)
+    imupub = rospy.Publisher('imu', Imu, queue_size=1, tcp_nodelay=False)
+    batpub = rospy.Publisher('battery', BatteryState, queue_size=1, tcp_nodelay=False)
+    fc.modepub = rospy.Publisher('mode', Mode, queue_size=1, tcp_nodelay=False)
+    name_space = rospy.get_namespace()
     print 'Publishing:'
-    print '/pidrone/imu'
-    print '/pidrone/mode'
-    print '/pidrone/battery'
+    print name_space+'imu'
+    print name_space+'mode'
+    print name_space+'battery'
 
     # Subscribers
     ############
-    rospy.Subscriber("/pidrone/desired/mode", Mode, fc.desired_mode_callback)
-    rospy.Subscriber('/pidrone/fly_commands', RC, fc.fly_commands_callback)
+    rospy.Subscriber("desired/mode", Mode, fc.desired_mode_callback)
+    rospy.Subscriber('fly_commands', RC, fc.fly_commands_callback)
 
 
     # heartbeat subscribers
-    rospy.Subscriber("/pidrone/heartbeat/infrared", Empty, fc.heartbeat_infrared_callback)
-    rospy.Subscriber("/pidrone/heartbeat/web_interface", Empty, fc.heartbeat_web_interface_callback)
-    rospy.Subscriber("/pidrone/heartbeat/pid_controller", Empty, fc.heartbeat_pid_controller_callback)
-    rospy.Subscriber("/pidrone/state", Odometry, fc.heartbeat_state_estimator_callback)
+    rospy.Subscriber("heartbeat/infrared", Empty, fc.heartbeat_infrared_callback)
+    rospy.Subscriber("heartbeat/web_interface", Empty, fc.heartbeat_web_interface_callback)
+    rospy.Subscriber("heartbeat/pid_controller", Empty, fc.heartbeat_pid_controller_callback)
+    rospy.Subscriber("state", Odometry, fc.heartbeat_state_estimator_callback)
 
 
 

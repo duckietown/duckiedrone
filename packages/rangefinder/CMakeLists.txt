@@ -12,12 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 )
 
-## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-  sensor_msgs
-)
+
 catkin_package(CATKIN_DEPENDS message_runtime)
 
 catkin_package()

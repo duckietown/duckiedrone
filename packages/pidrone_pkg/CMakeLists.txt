@@ -8,7 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
 )
 
-catkin_package()
+catkin_package(CATKIN_DEPENDS message_runtime)
 
 catkin_package()
 

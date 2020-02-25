@@ -66,10 +66,10 @@ def main():
 
     print("we are in main")
 
-    rangefinder_pub = rospy.Publisher('/pidrone/infrared', Range, queue_size=1)
+    rangefinder_pub = rospy.Publisher('infrared', Range, queue_size=1)
     print("publihser created")
     rangefinder = rangefinder_average(rangefinder_pub)
-    rangefinder_sub = rospy.Subscriber('/pidrone/lidar_sensor', Range, rangefinder.callback)
+    rangefinder_sub = rospy.Subscriber('lidar_sensor', Range, rangefinder.callback)
     r = rospy.Rate(100)
     i = 0
     rospy.spin()

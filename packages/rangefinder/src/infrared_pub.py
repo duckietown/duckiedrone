@@ -62,8 +62,8 @@ def main():
 
     # Publishers
     ############
-    ir.range_pub = rospy.Publisher('/pidrone/infrared', Range, queue_size=1)
-    ir.heartbeat_pub = rospy.Publisher('/pidrone/heartbeat/infrared', Empty, queue_size=1)
+    ir.range_pub = rospy.Publisher('infrared', Range, queue_size=1)
+    ir.heartbeat_pub = rospy.Publisher('heartbeat/infrared', Empty, queue_size=1)
     print 'Publishing IR'
 
     # Non-ROS Setup
