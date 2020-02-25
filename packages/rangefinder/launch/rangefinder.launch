@@ -14,9 +14,9 @@
 
   <group if="$(eval arg('rangefinder') == 'lidar')" ns="$(arg veh)">
 
-	  <?node pkg="$(arg pkg_name)" type="lidar_sensor_pub.py" 
+	  <node pkg="$(arg pkg_name)" type="lidar_sensor_pub.py" 
 		  name="lidar_sensor_pub1" output="screen">
-		  <param name="i2c_channel_id" value="0" /></?>
+		  <param name="i2c_channel_id" value="0" /></node>
 
           <node pkg="$(arg pkg_name)" type="lidar_sensor_pub.py" 
 		  name="lidar_sensor_pub2">
