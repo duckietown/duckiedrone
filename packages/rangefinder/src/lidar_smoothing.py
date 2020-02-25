@@ -54,7 +54,7 @@ class rangefinder_average():
         msg.range = self.return_median()
         msg.header = self.header
         self.publisher.publish(msg)
-	print np.around(self.ranges, 4), "\t\t\t\r"
+	print "Last four ranges recived: ", np.around(self.ranges, 4), "\t\t\t\r"
 
 
 
