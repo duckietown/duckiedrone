@@ -1,5 +1,5 @@
 <launch>
-
+  <group ns="duckiedrone">
   <node pkg="pidrone_pkg" type="pid_controller.py" name="pid_controller" output="screen"></node>
 
   <node pkg="pidrone_pkg" type="state_estimator.py" name="state_estimator"></node>
@@ -15,4 +15,5 @@
   <!-- For Javascript Web Interface -->
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"></include>
   <node pkg="web_video_server" type="web_video_server" name="web_video_server"></node>  
+  </group>
 </launch>
