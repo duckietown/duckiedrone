@@ -13,7 +13,8 @@ dt_launchfile_init
 
 
 # launching app
-dt_exec roslaunch pidrone_pkg drone.launch
+dt_exec roslaunch pidrone_pkg drone.launch veh:=$VEHICLE_NAME \
+	robot_type:=$ROBOT_TYPE
 #this is where the node that communicates with the web browser is launched
 dt_exec roslaunch pidrone_pkg rosbridge_websocket.launch
 # ----------------------------------------------------------------------------

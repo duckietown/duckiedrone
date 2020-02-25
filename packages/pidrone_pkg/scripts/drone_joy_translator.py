@@ -20,17 +20,17 @@ positionMsg.data = True
 poseMsg = Pose()
 twistMsg = Twist()
 
-modepub = rospy.Publisher('/pidrone/desired/mode', Mode, queue_size=1)
+modepub = rospy.Publisher('desired/mode', Mode, queue_size=1)
 
-positionPub = rospy.Publisher('/pidrone/position_control', Bool, queue_size=1)
-positionControlPub = rospy.Publisher('/pidrone/desired/pose', Pose, queue_size=1)
+positionPub = rospy.Publisher('position_control', Bool, queue_size=1)
+positionControlPub = rospy.Publisher('desired/pose', Pose, queue_size=1)
 
-velocityControlPub = rospy.Publisher('/pidrone/desired/twist', Twist, queue_size=1)
+velocityControlPub = rospy.Publisher('desired/twist', Twist, queue_size=1)
 
-mappub = rospy.Publisher('/pidrone/map', Empty, queue_size=1)
+mappub = rospy.Publisher('map', Empty, queue_size=1)
 
-resetpub = rospy.Publisher('/pidrone/reset_transform', Empty, queue_size=1)
-togglepub = rospy.Publisher('/pidrone/toggle_transform', Empty, queue_size=1)
+resetpub = rospy.Publisher('reset_transform', Empty, queue_size=1)
+togglepub = rospy.Publisher('toggle_transform', Empty, queue_size=1)
 #rospy.set_param('joy/autorepeat_rate', 20)
 def joy_callback(data):
     global scalar

@@ -84,17 +84,17 @@ class StateEstimator(object):
         # List to store the process objects from subprocess.Popen()
         self.processes = []
 
-        self.ukf_topics = {2: '/pidrone/state/ukf_2d',
-                           7: '/pidrone/state/ukf_7d',
-                           12: '/pidrone/state/ukf_12d'}
-        self.ema_topic = '/pidrone/state/ema'
+        self.ukf_topics = {2: 'state/ukf_2d',
+                           7: 'state/ukf_7d',
+                           12: 'state/ukf_12d'}
+        self.ema_topic = 'state/ema'
         # NOTE: Currently not supported is running both a simulator and mocap at
         #       the same time for state estimation. There is no apparent need
         #       for such functionality.
-        self.mocap_topic = '/pidrone/state/ground_truth'
-        self.simulator_topic = '/pidrone/state/ground_truth'
+        self.mocap_topic = 'state/ground_truth'
+        self.simulator_topic = 'state/ground_truth'
 
-        self.state_pub = rospy.Publisher('/pidrone/state', Odometry, queue_size=1,
+        self.state_pub = rospy.Publisher('state', Odometry, queue_size=1,
                                          tcp_nodelay=False)
 
         self.setup_ukf_with_ground_truth()
@@ -155,7 +155,7 @@ class StateEstimator(object):
         if do_setup:
             self.last_ground_truth_height = None
             self.last_ukf_height = None
-            self.ukf_stats_pub = rospy.Publisher('/pidrone/ukf_stats', UkfStats, queue_size=1,
+            self.ukf_stats_pub = rospy.Publisher('ukf_stats', UkfStats, queue_size=1,
                                              tcp_nodelay=False)
             if 'ukf' in self.primary_estimator:
                 # If the primary estimator is a UKF, use this one

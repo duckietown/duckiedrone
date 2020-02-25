@@ -354,20 +354,20 @@ def main(ControllerClass):
 
     # Publishers
     ############
-    pid_controller.cmdpub = rospy.Publisher('/pidrone/fly_commands', RC, queue_size=1)
-    pid_controller.position_control_pub = rospy.Publisher('/pidrone/position_control', Bool, queue_size=1)
-    pid_controller.heartbeat_pub = rospy.Publisher('/pidrone/heartbeat/pid_controller', Empty, queue_size=1)
+    pid_controller.cmdpub = rospy.Publisher('fly_commands', RC, queue_size=1)
+    pid_controller.position_control_pub = rospy.Publisher('position_control', Bool, queue_size=1)
+    pid_controller.heartbeat_pub = rospy.Publisher('heartbeat/pid_controller', Empty, queue_size=1)
 
     # Subscribers
     #############
-    rospy.Subscriber('/pidrone/state', Odometry, pid_controller.current_state_callback)
-    rospy.Subscriber('/pidrone/desired/pose', Pose, pid_controller.desired_pose_callback)
-    rospy.Subscriber('/pidrone/desired/twist', Twist, pid_controller.desired_twist_callback)
-    rospy.Subscriber('/pidrone/mode', Mode, pid_controller.current_mode_callback)
-    rospy.Subscriber('/pidrone/desired/mode', Mode, pid_controller.desired_mode_callback)
-    rospy.Subscriber('/pidrone/position_control', Bool, pid_controller.position_control_callback)
-    rospy.Subscriber('/pidrone/reset_transform', Empty, pid_controller.reset_callback)
-    rospy.Subscriber('/pidrone/picamera/lost', Bool, pid_controller.lost_callback)
+    rospy.Subscriber('state', Odometry, pid_controller.current_state_callback)
+    rospy.Subscriber('desired/pose', Pose, pid_controller.desired_pose_callback)
+    rospy.Subscriber('desired/twist', Twist, pid_controller.desired_twist_callback)
+    rospy.Subscriber('mode', Mode, pid_controller.current_mode_callback)
+    rospy.Subscriber('desired/mode', Mode, pid_controller.desired_mode_callback)
+    rospy.Subscriber('position_control', Bool, pid_controller.position_control_callback)
+    rospy.Subscriber('reset_transform', Empty, pid_controller.reset_callback)
+    rospy.Subscriber('picamera/lost', Bool, pid_controller.lost_callback)
 
 
 

@@ -35,7 +35,7 @@ class EMAStateEstimator(object):
         header.stamp = rospy.Time.now()
         header.frame_id = 'Body'
 
-        self.state_topic_str = '/pidrone/state/ema'
+        self.state_topic_str = 'state/ema'
 
         self.state = Odometry()
         self.state.header = header
@@ -206,11 +206,11 @@ def main():
 
     # Subscribers
     #############
-    rospy.Subscriber("/pidrone/reset_transform", Empty, state_estimator.reset_callback)
-    rospy.Subscriber('/pidrone/picamera/twist', TwistStamped, state_estimator.twist_callback)
-    rospy.Subscriber('/pidrone/picamera/pose', PoseStamped, state_estimator.pose_callback)
-    rospy.Subscriber('/pidrone/infrared', Range, state_estimator.range_callback)
-    rospy.Subscriber('/pidrone/imu', Imu, state_estimator.imu_callback)
+    rospy.Subscriber("reset_transform", Empty, state_estimator.reset_callback)
+    rospy.Subscriber('picamera/twist', TwistStamped, state_estimator.twist_callback)
+    rospy.Subscriber('picamera/pose', PoseStamped, state_estimator.pose_callback)
+    rospy.Subscriber('infrared', Range, state_estimator.range_callback)
+    rospy.Subscriber('imu', Imu, state_estimator.imu_callback)
 
 
 

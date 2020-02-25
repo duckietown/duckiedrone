@@ -42,8 +42,8 @@ class UKFStateEstimator2D(object):
         self.got_ir = False
         self.loop_hz = loop_hz
         
-        self.ir_topic_str = '/pidrone/infrared'
-        self.imu_topic_str = '/pidrone/imu'
+        self.ir_topic_str = 'infrared'
+        self.imu_topic_str = 'imu'
         throttle_suffix = '_throttle'
         
         if ir_throttled:
@@ -82,7 +82,7 @@ class UKFStateEstimator2D(object):
         rospy.Subscriber(self.ir_topic_str, Range, self.ir_data_callback)
         
         # Create the publisher to publish state estimates
-        self.state_pub = rospy.Publisher('/pidrone/state/ukf_2d', Odometry, queue_size=1,
+        self.state_pub = rospy.Publisher('state/ukf_2d', Odometry, queue_size=1,
                                          tcp_nodelay=False)
         
     def initialize_ukf(self):
@@ -356,9 +356,9 @@ def main():
     # Arguments to determine if the throttle command is being used. E.g.:
     #   rosrun topic_tools throttle messages /pidrone/infrared 40.0
     parser.add_argument('--ir_throttled', action='store_true',
-            help=('Use throttled infrared topic /pidrone/infrared_throttle'))
+            help=('Use throttled infrared topic infrared_throttle'))
     parser.add_argument('--imu_throttled', action='store_true',
-            help=('Use throttled IMU topic /pidrone/imu_throttle'))
+            help=('Use throttled IMU topic imu_throttle'))
     parser.add_argument('--loop_hz', '-hz', default=30.0,
                         type=check_positive_float_duration,
                         help=('Frequency at which to run the predict-update '

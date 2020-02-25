@@ -28,7 +28,7 @@ def main():
     
     
     rospy.init_node("heartbeat_publisher_NEVER_RUN_ON_DRONE")
-    heartbeat_pub = rospy.Publisher('/pidrone/heartbeat/web_interface', Empty, queue_size=1)
+    heartbeat_pub = rospy.Publisher('heartbeat/web_interface', Empty, queue_size=1)
     r = rospy.Rate(10)
 
 
@@ -41,6 +41,7 @@ if __name__ == "__main__":
     print "Under no circumstances should this node be running on a drone"
     if platform.machine()[:3] == 'arm':
         print "Heartbeat node is running on ARM architecture, shuting down"
+        print "If this is the drone this is extremely dangerous"
         exit()
     else:
         main()
