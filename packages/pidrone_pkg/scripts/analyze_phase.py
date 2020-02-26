@@ -1,14 +1,14 @@
 import tf
 import cv2
 import rospy
-import picamera
+# import picamera
 import numpy as np
 from pidrone_pkg.msg import State
 from std_msgs.msg import Empty, Bool
 from geometry_msgs.msg import PoseStamped
 
 
-class AnalyzePhase(picamera.array.PiMotionAnalysis):
+class AnalyzePhase(object):
     """
     A class that uses OpenCV's estimateRigidTransform method to calculate
     the change in position of the drone.
@@ -22,6 +22,9 @@ class AnalyzePhase(picamera.array.PiMotionAnalysis):
     /pidrone/reset_transform
     /pidrone/position_control
     """
+
+    def __init__(self):
+        self.setup()
 
     def setup(self):
 
@@ -56,11 +59,29 @@ class AnalyzePhase(picamera.array.PiMotionAnalysis):
         rospy.Subscriber("/pidrone/position_control", Bool, self.position_control_callback)
         rospy.Subscriber("/pidrone/state", State, self.state_callback)
 
+        rospy.Subscriber("/duckiedrone2/camera_node/image/raw", Image, self.callback)
+
+    def callback(self, data):
+        try:
+            cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+        except CvBridgeError as e:
+            print(e)
+
+        # rows, cols, channels) = cv_image.shape
+        # print(cv_image.shape)
+
+        # try:
+        #     self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, "bgr8"))
+        # except CvBridgeError as e:
+        #     print(e)
+
+        self.write(cv_image)
+
     def write(self, data):
         ''' A method that is called everytime an image is taken '''
 
 
-        image = np.reshape(np.fromstring(data, dtype=np.uint8), (240, 320, 3))
+        image = np.reshape(np.fromstring(data, dtype=np.uint8), (480, 640, 3))
         # Run the following only if position control is enabled to prevent
         # wasting computation resources on unused position data
         if self.position_control:
