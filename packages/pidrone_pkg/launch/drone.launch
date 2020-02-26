@@ -1,5 +1,4 @@
-<launch>
-<<<<<<< HEAD
+<launch>D
   <arg name="veh" doc="Name of vehicle. ex megaman"/>
   <arg name="robot_type" default="duckiedrone"  
 		doc="The type of the robot: should be duckiebot, 
