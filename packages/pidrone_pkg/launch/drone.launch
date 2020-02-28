@@ -15,7 +15,7 @@
   
   <node pkg="pidrone_pkg" type="drone_joy_translator.py" name="drone_joy_translator" output="screen"></node>
   
-  <node Heartbeat node pkg="pidrone_pkg" type="heartbeat_publisher_NEVER_RUN_ON_DRONE.py" name="heartbeat_publisher_NEVER_RUN_ON_DRONE" output="screen" />
+  <--! node Heartbeat node pkg="pidrone_pkg" type="heartbeat_publisher_NEVER_RUN_ON_DRONE.py" name="heartbeat_publisher_NEVER_RUN_ON_DRONE" output="screen" -->
   
 
   <!-- For Javascript Web Interface -->
