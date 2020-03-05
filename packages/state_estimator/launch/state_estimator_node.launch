@@ -1,0 +1,12 @@
+<launch>
+  <arg name="veh" doc="Name of vehicle. ex megaman"/>
+  <arg name="robot_type" default="duckiedrone"  
+		doc="The type of the robot: should be duckiebot, 
+		watchtower, duckiedrone or traffic_light"/>
+ 
+  <group ns="duckiedrone" >
+   
+  <node pkg="state_estimator" type="state_estimator.py" name="state_estimator"></node>
+   
+  </group>
+</launch>

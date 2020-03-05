@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>non_hardware</name>
+  <version>0.0.0</version>
+  <description>The non_hardware package</description>
+
+  <maintainer email="pi@todo.todo">pi</maintainer>
+
+
+  <license>TODO</license>
+
+
+<run_depend>message_runtime</run_depend>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rospy</build_depend>
+  <run_depend>rospy</run_depend>
+</package>
