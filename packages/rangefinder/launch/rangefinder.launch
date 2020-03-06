@@ -4,11 +4,11 @@
 	<arg name="robot_type" default="duckiebot"  
 		doc="The type of the robot: should be duckiebot, 
 		watchtower, duckiedrone or traffic_light"/>
-
 	<arg name="rangefinder" 
 		doc="rangefinder type: lidar or infrared"/>
-	<arg name="pkg_name" value="rangefinder"/>
 
+
+	<arg name="pkg_name" value="rangefinder"/>
 	<rosparam command="load" ns="$(arg veh)"
 		file="$(find rangefinder)/config/$(arg rangefinder).yaml"/>
 

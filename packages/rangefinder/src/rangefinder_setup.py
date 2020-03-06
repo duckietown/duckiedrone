@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 import RPi.GPIO as GPIO
-import sys
+import sys, os
 sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
 import VL53L1X
 import time
-import argparse
 
 #The purpose of this script:
 
@@ -26,16 +25,28 @@ import argparse
 #the remap command, then one of the remaining two,
 # then we remap the remaing one. 
 
-def main(i2c_channels):
+def main():
     number_lidar_sensors_connected = 0
+
+    path=os.path.join(os.path.dirname(__file__), '../config/lidar.yaml') 
+
+    with open(path) as lidar_yaml:
+        base = lidar_yaml.readline()
+        base = lidar_yaml.readline()
+        base = base.split()
+        base = base[1] #get hex base address
+        #stored in the lidar file
+    
+    i2c_channels = []
+    for i in [0,1,2,3]:
+        i2c = str(base)+str(i)
+        i2c_channels.append(int(i2c, 16))
 
     GPIO.setwarnings(False)
 
-
-
-#these i2c_addresses 30,31,32,33 are arbitrary
-#but they must match the ones that you reopen
-#when you spin up the lidar nodes
+    #these i2c_addresses 30,31,32,33 are arbitrary 
+    #but they must match the ones that you reopen
+    #when you spin up the lidar nodes
     GPIO.setmode(GPIO.BCM)
     mode = GPIO.getmode()
     print(mode)
@@ -66,9 +77,9 @@ def main(i2c_channels):
     try:
         tof1 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x29)
         tof1.open()
-        tof1.change_address(0x30)
+        tof1.change_address(i2c_channels[0])
 
-        tof1 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x30)
+        tof1 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c_channels[0])
         tof1.open()
         number_lidar_sensors_connected += 1
     except RuntimeError as e:
@@ -81,8 +92,8 @@ def main(i2c_channels):
     try:
         tof2 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x29)
         tof2.open()
-        tof2.change_address(0x31)
-        tof2 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x31)
+        tof2.change_address(i2c_channels[1])
+        tof2 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c_channels[1])
         tof2.open()
         number_lidar_sensors_connected += 1
     except RuntimeError as e:
@@ -94,8 +105,8 @@ def main(i2c_channels):
     try:
         tof3 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x29)
         tof3.open()
-        tof3.change_address(0x32)
-        tof3 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x32)
+        tof3.change_address(i2c_channels[2])
+        tof3 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c_channels[2])
         tof3.open()
         number_lidar_sensors_connected += 1
     except RuntimeError as e:
@@ -106,8 +117,8 @@ def main(i2c_channels):
     try:
         tof4 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x29)
         tof4.open()
-        tof4.change_address(0x33)
-        tof4 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=0x33)
+        tof4.change_address(i2c_channels[3])
+        tof4 = VL53L1X.VL53L1X(i2c_bus=1, i2c_address=i2c_channels[3])
         tof4.open()
         number_lidar_sensors_connected += 1
     except RuntimeError as e:
@@ -123,12 +134,4 @@ def main(i2c_channels):
 
     
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--channels", nargs=4)
-    inputs = parser.parse_args()
-    i2c_channels = []
-    for i in inputs.channels:
-        i2c_channels.append(int(i, 16))
-
-    print "input channels", i2c_channels
-    main(i2c_channels)
+    main()

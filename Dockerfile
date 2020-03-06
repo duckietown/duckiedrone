@@ -19,40 +19,12 @@ ARG REPO_PATH="${CATKIN_WS_DIR}/src/${REPO_NAME}"
 RUN mkdir -p "${REPO_PATH}"
 WORKDIR "${REPO_PATH}"
 
-
-
-# TODO
-#ENV DEBIAN_FRONTEND=noninteractive
-#RUN rm -rf /etc/apt/*
-#ADD assets/apt_from_drone /etc/apt/
-
-# raspberry pi stuff
-#RUN apt-get update \
-#  && apt-get install \
-#    --yes \
-#    --no-install-recommends \
-#    --option Dpkg::Options::="--force-confdef" \
-#    --option Dpkg::Options::="--force-confold" \
-#        libraspberrypi0 \
-#        libraspberrypi-bin \
-#        libraspberrypi-dev \
-#        libraspberrypi-doc \
-#        raspberrypi-bootloader \
-#  && rm -rf /var/lib/apt/lists/*
-
-# TODO
-
-
-
 # install apt dependencies
 COPY ./dependencies-apt.txt "${REPO_PATH}/"
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     $(awk -F: '/^[^#]/ { print $1 }' dependencies-apt.txt | uniq) \
   && rm -rf /var/lib/apt/lists/*
-
-
-
 
 # install python dependencies
 COPY ./dependencies-py.txt "${REPO_PATH}/"
