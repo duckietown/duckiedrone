@@ -100,7 +100,7 @@ class PID:
         self.yaw = yaw
 
         self.trim_controller_cap_throttle = 5.0 #5.0
-        self.trim_controller_thresh_throttle = 0.0 #5.0
+        self.trim_controller_thresh_throttle = 5.0
 
         self.throttle = throttle
         self.throttle_low = throttle_low
