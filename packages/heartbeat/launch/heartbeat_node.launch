@@ -4,12 +4,12 @@
 		doc="The type of the robot: should be duckiebot, 
 		watchtower, duckiedrone or traffic_light"/>
 
-  <group ns="$(arg veh)" >
+  <arg name="pkg_name" value="heartbeat" />
+  <arg name="node_name" value="heartbeat_publisher_NEVER_RUN_ON_DRONE" />
 
-  <node pkg="heartbeat" 
-        type="heartbeat_publisher_NEVER_RUN_ON_DRONE.py" 
-        name="heartbeat_publisher_NEVER_RUN_ON_DRONE" 
-        output="screen"/>
-
+  <group ns="$(arg veh)">
+    <node  name="$(arg node_name)" pkg="$(arg pkg_name)" 
+      type="$(arg node_name).py" output="screen">
+          </node>
   </group>
 </launch>

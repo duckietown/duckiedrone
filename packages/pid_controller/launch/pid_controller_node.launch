@@ -4,11 +4,9 @@
   <arg name="node_name" default="pid_controller_node"/>
 
   <group ns="$(arg veh)">
-
-    <node pkg="$(arg pkg_name)" type="$(arg node_name).py" name="$(arg node_name)" output="screen">
-    </node>
-    
+    <node  name="$(arg node_name)" pkg="$(arg pkg_name)" 
+      type="$(arg node_name).py" output="screen">
+          </node>
   </group>
-
 </launch>
 
