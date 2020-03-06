@@ -22,8 +22,8 @@ class EMAStateEstimator(object):
     Subscribers:
     /pidrone/infrared
     /pidrone/imu
-    /pidrone/picamera/pose
-    /pidrone/picamera/twist
+    /pidrone/camera_node/pose
+    /pidrone/camera_node/twist
     '''
 
     def __init__(self, max_range):
@@ -207,8 +207,8 @@ def main():
     # Subscribers
     #############
     rospy.Subscriber("reset_transform", Empty, state_estimator.reset_callback)
-    rospy.Subscriber('picamera/twist', TwistStamped, state_estimator.twist_callback)
-    rospy.Subscriber('picamera/pose', PoseStamped, state_estimator.pose_callback)
+    rospy.Subscriber('camera_node/twist', TwistStamped, state_estimator.twist_callback)
+    rospy.Subscriber('camera_node/pose', PoseStamped, state_estimator.pose_callback)
     rospy.Subscriber('infrared', Range, state_estimator.range_callback)
     rospy.Subscriber('imu', Imu, state_estimator.imu_callback)
 

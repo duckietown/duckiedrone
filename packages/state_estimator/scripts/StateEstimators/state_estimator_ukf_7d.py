@@ -48,8 +48,8 @@ class UKFStateEstimator7D(object):
         
         self.ir_topic_str = 'infrared'
         self.imu_topic_str = 'imu'
-        self.optical_flow_topic_str = 'picamera/twist'
-        self.camera_pose_topic_str = 'picamera/pose'
+        self.optical_flow_topic_str = 'camera_node/twist'
+        self.camera_pose_topic_str = 'camera_node/pose'
         throttle_suffix = '_throttle'
         
         if ir_throttled:

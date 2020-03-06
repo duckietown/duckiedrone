@@ -368,7 +368,7 @@ def main(ControllerClass):
     rospy.Subscriber('desired/mode', Mode, pid_controller.desired_mode_callback)
     rospy.Subscriber('position_control', Bool, pid_controller.position_control_callback)
     rospy.Subscriber('reset_transform', Empty, pid_controller.reset_callback)
-    rospy.Subscriber('picamera/lost', Bool, pid_controller.lost_callback)
+    rospy.Subscriber('camera_node/lost', Bool, pid_controller.lost_callback)
 
 
 
