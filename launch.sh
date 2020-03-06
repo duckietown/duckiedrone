@@ -62,7 +62,7 @@ if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 
 
 #launching app
-dt_exec roslaunch pidrone_pkg all_drivers.launch \
+dt_exec roslaunch hwonly all_drivers.launch \
         veh:=$VEHICLE_NAME \
         robot_type:=$ROBOT_TYPE \
         rangefinder:=$rangefinderlaunch \
