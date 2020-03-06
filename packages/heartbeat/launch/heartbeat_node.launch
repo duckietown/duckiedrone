@@ -6,7 +6,7 @@
 
   <group ns="$(arg veh)" >
 
-  <node Heartbeat node pkg="heartbeat" 
+  <node pkg="heartbeat" 
         type="heartbeat_publisher_NEVER_RUN_ON_DRONE.py" 
         name="heartbeat_publisher_NEVER_RUN_ON_DRONE" 
         output="screen"/>

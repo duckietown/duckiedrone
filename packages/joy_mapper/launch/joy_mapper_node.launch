@@ -6,7 +6,7 @@
 
   <group ns="$(arg veh)">
   
-    <node pkg="$(arg pkg_name)" type="$(arg node_name).py" name="$(arg node_name)" output="screen">
+    <node pkg="$(arg pkg_name)" type="$(arg node_name).py" name="$(arg node_name)">
       <!--rosparam command="load" file="$(find joy_mapper)/config/$(arg node_name)/$(arg param_file_name).yaml"-->
     </node>
 

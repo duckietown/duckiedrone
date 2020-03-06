@@ -326,7 +326,7 @@ def joy_callback(data):
 def main():
     node_name = os.path.splitext(os.path.basename(__file__))[0]
     rospy.init_node(node_name)
-    rospy.Subscriber("/joy", Joy, joy_callback)
+    rospy.Subscriber("joy", Joy, joy_callback)
     rospy.spin()
     
     

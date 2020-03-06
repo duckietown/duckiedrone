@@ -20,11 +20,11 @@
 
 
 
-  <!-- TODO deal with heartbeat propperly 
+  <!-- TODO deal with heartbeat propperly -->
   <include file="$(find heartbeat)/launch/heartbeat_node.launch">
         <arg name="veh" value="$(arg veh)"/>
     </include>
-  -->
+  
 
   <include file="$(find pid_controller)/launch/pid_controller_node.launch">
         <arg name="veh" value="$(arg veh)"/>
