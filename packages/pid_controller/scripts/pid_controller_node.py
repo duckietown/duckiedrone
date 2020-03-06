@@ -11,7 +11,8 @@ import command_values as cmds
 from pid_class import PID, PIDaxis
 from geometry_msgs.msg import Pose, Twist
 from nav_msgs.msg import Odometry
-from pidrone_pkg.msg import Mode, RC
+from duckietown_msgs.msg import DroneMode as Mode
+from duckietown_msgs.msg import DroneControl as RC
 from std_msgs.msg import Float32, Empty, Bool
 from three_dim_vec import Position, Velocity, Error, RPY
 
