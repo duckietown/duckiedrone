@@ -12,8 +12,7 @@ from cv_bridge import CvBridge
 def main():
     resolution = (640, 480)
     flow_analyzer = AnalyzeFlow(resolution)
-    node_name = os.path.splitext(os.path.basename(__file__))[0]
-    rospy.init_node(node_name)
+    rospy.init_node('analyze_flow_and_phase_node')
     try:
         rospy.spin()
     except KeyboardInterrupt:

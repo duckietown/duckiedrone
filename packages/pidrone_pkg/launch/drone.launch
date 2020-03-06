@@ -1,4 +1,5 @@
 <launch>
-  <node pkg="pidrone_pkg" type="vision_flow_and_phase.py" name="vision_flow_and_phase" output="screen"></node>
+
+  <node ns="duckiedrone" pkg="pidrone_pkg" type="vision_flow_and_phase.py" name="vision_flow_and_phase" output="screen"></node>
 
 </launch>

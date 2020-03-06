@@ -3,7 +3,7 @@ import cv2
 import rospy
 # import picamera
 import numpy as np
-from pidrone_pkg.msg import State
+from nav_msgs.msg import Odometry
 from std_msgs.msg import Empty, Bool
 from geometry_msgs.msg import PoseStamped
 
@@ -52,12 +52,12 @@ class AnalyzePhase(object):
         # ROS Setup
         ###########
         # Publisher
-        self.posepub = rospy.Publisher('/pidrone/picamera/pose', PoseStamped, queue_size=1)
-        self.lostpub = rospy.Publisher('/pidrone/picamera/lost', Bool, queue_size=1)
+        self.posepub = rospy.Publisher('picamera/pose', PoseStamped, queue_size=1)
+        self.lostpub = rospy.Publisher('picamera/lost', Bool, queue_size=1)
         # Subscribers
-        rospy.Subscriber("/pidrone/reset_transform", Empty, self.reset_callback)
-        rospy.Subscriber("/pidrone/position_control", Bool, self.position_control_callback)
-        rospy.Subscriber("/pidrone/state", State, self.state_callback)
+        rospy.Subscriber("reset_transform", Empty, self.reset_callback)
+        rospy.Subscriber("position_control", Bool, self.position_control_callback)
+        rospy.Subscriber("state", Odometry, self.state_callback)
 
         rospy.Subscriber("/duckiedrone2/camera_node/image/raw", Image, self.callback)
 
@@ -204,6 +204,6 @@ class AnalyzePhase(object):
         Store z position (altitude) reading from State, along with most recent
         x and y position estimate
         """
-        self.altitude = msg.pose_with_covariance.pose.position.z
-        self.x_position_from_state = msg.pose_with_covariance.pose.position.x
-        self.y_position_from_state = msg.pose_with_covariance.pose.position.y
+        self.altitude = msg.pose.pose.position.z
+        self.x_position_from_state = msg.pose.pose.position.x
+        self.y_position_from_state = msg.pose.pose.position.y

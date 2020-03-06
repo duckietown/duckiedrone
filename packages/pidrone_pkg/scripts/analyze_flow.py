@@ -2,7 +2,7 @@ from __future__ import division
 import rospy
 import numpy as np
 # import picamera.array
-from pidrone_pkg.msg import State
+from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TwistStamped
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
@@ -20,7 +20,7 @@ class AnalyzeFlow():
         # self.image_pub = rospy.Publisher("/duckiedrone2/camera_node/image_pub_test", Image, queue_size=1)
         self.bridge = CvBridge()
 
-        rospy.Subscriber("/duckiedrone2/camera_node/image/raw", Image, self.callback)
+        rospy.Subscriber("camera_node/image/raw", Image, self.callback)
 
         self.camera_wh = camera_wh
 
@@ -59,9 +59,9 @@ class AnalyzeFlow():
         # ROS setup:
         ############
         # Publisher:
-        self.twistpub = rospy.Publisher('/duckiedrone2/camera_node/twist', TwistStamped, queue_size=1)
+        self.twistpub = rospy.Publisher('camera_node/twist', TwistStamped, queue_size=1)
         # Subscriber:
-        rospy.Subscriber("/pidrone/state", State, self.state_callback)
+        rospy.Subscriber("state", Odometry, self.state_callback)
 
     def write(self, b):
         if self.cols is None:
@@ -102,4 +102,4 @@ class AnalyzeFlow():
         """
         Store z position (altitude) reading from State
         """
-        self.altitude = msg.pose_with_covariance.pose.position.z
+        self.altitude = msg.pose.pose.position.z
