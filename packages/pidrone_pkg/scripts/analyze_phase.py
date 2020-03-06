@@ -58,8 +58,7 @@ class AnalyzePhase(object):
         rospy.Subscriber("reset_transform", Empty, self.reset_callback)
         rospy.Subscriber("position_control", Bool, self.position_control_callback)
         rospy.Subscriber("state", Odometry, self.state_callback)
-
-        rospy.Subscriber("/duckiedrone2/camera_node/image/raw", Image, self.callback)
+        rospy.Subscriber("camera_node/image/raw", Image, self.callback)
 
     def callback(self, data):
         try:
