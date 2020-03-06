@@ -6,7 +6,7 @@
  
   <group ns="duckiedrone" >
    
-  <node pkg="state_estimator" type="state_estimator.py" name="state_estimator"></node>
+  <node pkg="state_estimator" type="state_estimator_node.py" name="state_estimator_node"></node>
    
   </group>
 </launch>

@@ -26,8 +26,8 @@ class PIDController(object):
         #set max range for range finder
         self.max_range = max_range
         # Initialize the current and desired modes
-        self.current_mode = Mode('DISARMED')
-        self.desired_mode = Mode('DISARMED')
+        self.current_mode = Mode(0) #'DISARMED'
+        self.desired_mode = Mode(0) #'DISARMED'
 
         # Initialize in velocity control
         self.position_control = False
@@ -157,11 +157,11 @@ class PIDController(object):
 
     def current_mode_callback(self, msg):
         """ Update the current mode """
-        self.current_mode = msg.mode
+        self.current_mode = msg.drone_mode
 
     def desired_mode_callback(self, msg):
         """ Update the desired mode """
-        self.desired_mode = msg.mode
+        self.desired_mode = msg.drone_mode
 
     def position_control_callback(self, msg):
         """ Set whether or not position control is enabled """
@@ -388,17 +388,17 @@ def main(ControllerClass):
         fly_command = pid_controller.step()
 
         # reset the pids after arming and start up in velocity control
-        if pid_controller.current_mode == 'DISARMED':
-            if pid_controller.desired_mode == 'ARMED':
+        if pid_controller.current_mode == 0: #'DISARMED'
+            if pid_controller.desired_mode == 1: #'ARMED'
                 pid_controller.reset()
                 pid_controller.position_control_pub.publish(False)
         # reset the pids right before flying
-        if pid_controller.current_mode == 'ARMED':
-            if pid_controller.desired_mode == 'FLYING':
+        if pid_controller.current_mode == 1: #'ARMED'
+            if pid_controller.desired_mode == 2: #'FLYING'
                 pid_controller.reset()
         # if the drone is flying, send the fly_command
-        elif pid_controller.current_mode == 'FLYING':
-            if pid_controller.desired_mode == 'FLYING':
+        elif pid_controller.current_mode == 2: #'FLYING'
+            if pid_controller.desired_mode == 2: #'FLYING'
 
                 # Safety check to ensure drone does not fly too high
                 #height_safety_here
@@ -415,7 +415,7 @@ def main(ControllerClass):
             # with each flight until it converges
             # NOTE: do not store the throttle_low.init_i or else the drone will
             # take off abruptly after the first flight
-            elif pid_controller.desired_mode == 'DISARMED':
+            elif pid_controller.desired_mode == 0: #'DISARMED'
                 pid_controller.pid.roll_low.init_i = pid_controller.pid.roll_low._i
                 pid_controller.pid.pitch_low.init_i = pid_controller.pid.pitch_low._i
                 # Uncomment below statements to print the converged values.

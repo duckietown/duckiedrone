@@ -15,7 +15,7 @@ z_counter = -1
 z_step = 5 # cm
 scalar = 15
 modeMsg = Mode()
-modeMsg.mode = 'DISARMED'
+modeMsg.drone_mode = 0 #Disarmed
 positionMsg = Bool()
 positionMsg.data = True
 poseMsg = Pose()
@@ -70,8 +70,8 @@ def joy_callback(data):
             twistMsg.linear.y = 0.0
             twistMsg.linear.z = 0.0
             velocityControlPub.publish(twistMsg)
-        if modeMsg.mode == "DISARMED":
-            modeMsg.mode = "ARMED"
+        if modeMsg.drone_mode == 0: #"DISARMED"
+            modeMsg.drone_mode = 1 #"ARMED"
             modepub.publish(modeMsg)
 
     def publishDisarm():
@@ -86,7 +86,7 @@ def joy_callback(data):
             twistMsg.linear.z = 0.0
             velocityControlPub.publish(twistMsg)
         
-        modeMsg.mode = "DISARMED"
+        modeMsg.drone_mode = 0 #"DISARMED"
         modepub.publish(modeMsg)
 
     def publishTakeoff():
@@ -102,7 +102,7 @@ def joy_callback(data):
             twistMsg.angular.z = 0.0
             velocityControlPub.publish(twistMsg)    
         
-        modeMsg.mode = "FLYING"
+        modeMsg.drone_mode = 2 #"FLYING"
         modepub.publish(modeMsg)
 
     def publishTranslateLeft(value):
@@ -170,7 +170,7 @@ def joy_callback(data):
         positionControlPub.publish(poseMsg)
 
     def publishYawLeft():
-        #modeMsg.mode = "FLYING" #uncommented in original idk why AKM
+        #modeMsg.drone_mode = "FLYING" #uncommented in original idk why AKM
         twistMsg.linear.x = 0.0
         twistMsg.linear.y = 0.0
         twistMsg.linear.z = 0.0
@@ -178,7 +178,7 @@ def joy_callback(data):
         velocityControlPub.publish(twistMsg)
 
     def publishYawRight():
-        #modeMsg.mode = "FLYING"
+        #modeMsg.drone_mode = "FLYING"
         twistMsg.linear.x = 0.0
         twistMsg.linear.y = 0.0
         twistMsg.linear.z = 0.0

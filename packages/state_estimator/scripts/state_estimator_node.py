@@ -51,7 +51,7 @@ class StateEstimator(object):
         self.estimators.append(self.primary_estimator)
         
         student_project_pkg_dir = 'pidrone_project2_ukf'
-        pidrone_pkg_dir = 'pidrone_pkg'
+        pidrone_pkg_dir = 'state_estimator'
         
         if student_ukf:
             program_str = 'rosrun ' + student_project_pkg_dir + ' StateEstimators/student_'
