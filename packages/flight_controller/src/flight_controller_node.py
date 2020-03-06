@@ -14,7 +14,8 @@ from serial import SerialException
 from std_msgs.msg import Header, Empty
 from geometry_msgs.msg import Quaternion
 from nav_msgs.msg import Odometry
-from flight_controller.msg import Mode, RC
+from duckietown_msgs.msg import DroneMode as Mode
+from duckietown_msgs.msg import DroneControl as RC
 import os
 
 
@@ -44,8 +45,8 @@ class FlightController(object):
         # Connect to the flight controller board
         self.board = self.getBoard()
         # stores the current and previous modes
-        self.curr_mode = 'DISARMED'         #initialize as disarmed
-        self.prev_mode = 'DISARMED'         #initialize as disarmed
+        self.curr_mode = 0         #initialize as disarmed
+        self.prev_mode = 0         #initialize as disarmed
         # store the command to send to the flight controller
         self.command = cmds.disarm_cmd      #initialize as disarmed
         self.last_command = cmds.disarm_cmd
@@ -88,12 +89,12 @@ class FlightController(object):
     def desired_mode_callback(self, msg):
         """ Set the current mode to the desired mode """
         self.prev_mode = self.curr_mode
-        self.curr_mode = msg.mode
+        self.curr_mode = msg.drone_mode
         self.update_command()
 
     def fly_commands_callback(self, msg):
         """ Store and send the flight commands if the current mode is FLYING """
-        if self.curr_mode == 'FLYING':
+        if self.curr_mode == 2: #flying
             r = msg.roll
             p = msg.pitch
             y = msg.yaw
@@ -200,12 +201,12 @@ class FlightController(object):
 
     def update_command(self):
         ''' Set command values if the mode is ARMED or DISARMED '''
-        if self.curr_mode == 'DISARMED':
+        if self.curr_mode == 0: #disarmed
             self.command = cmds.disarm_cmd
-        elif self.curr_mode == 'ARMED':
-            if self.prev_mode == 'DISARMED':
+        elif self.curr_mode == 1: #armed
+            if self.prev_mode == 0: #disarmed
                 self.command = cmds.arm_cmd
-            elif self.prev_mode == 'ARMED':
+            elif self.prev_mode == 1: #armed
                 self.command = cmds.idle_cmd
 
     # Helper Methods:
@@ -243,7 +244,7 @@ class FlightController(object):
         self.board.sendCMD(8, MultiWii.SET_RAW_RC, cmds.disarm_cmd)
         self.board.receiveDataPacket()
         rospy.sleep(1)
-        self.modepub.publish('DISARMED')
+        self.modepub.publish(0) #disarm
         print "Successfully Disarmed"
         sys.exit()
 
