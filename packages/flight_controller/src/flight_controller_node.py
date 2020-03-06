@@ -344,7 +344,7 @@ def main():
         while not rospy.is_shutdown():
             # if the current mode is anything other than disarmed
             # preform as safety check
-            if fc.curr_mode != 'DISARMED':
+            if fc.curr_mode != 0: #'DISARMED'
                 # Break the loop if a safety check has failed
                 if fc.shouldIDisarm():
                     break
