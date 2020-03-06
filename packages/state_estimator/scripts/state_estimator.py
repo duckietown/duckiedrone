@@ -3,8 +3,8 @@
 import argparse
 import rospy
 from nav_msgs.msg import Odometry
-from pidrone_pkg.msg import StateGroundTruth
-from pidrone_pkg.msg import UkfStats
+from state_estimator.msg import StateGroundTruth
+from state_estimator.msg import UkfStats
 import subprocess
 import os
 

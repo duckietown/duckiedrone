@@ -1,0 +1,37 @@
+<launch>
+  <arg name="veh" doc="Name of vehicle. ex megaman"/>
+  <arg name="robot_type" default="duckiedrone"  
+		doc="The type of the robot: should be duckiebot, 
+		watchtower, duckiedrone or traffic_light"/>
+  <arg name="param_file_name" default="default" doc="Specify a param file. ex:megaman"/>
+
+
+    <!-- Joy Mapper: reads raw joy commands and trigger actions in Duckietown (e.g., move robot, start LF) -->
+    <include file="$(find joy_mapper)/launch/joy_mapper_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="param_file_name" value="$(arg param_file_name)"/>
+    </include>
+
+    <!-- TODO move this to the hwonly branch -->
+    <include file="$(find joystick)/launch/joystick_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+        <arg name="param_file_name" value="$(arg param_file_name)"/>
+    </include>
+
+
+
+  <!-- TODO deal with heartbeat propperly
+  <include file="$(find heartbeat)/launch/heartbeat_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+  -->
+
+  <include file="$(find pid_controller)/launch/pid_controller_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+  <include file="$(find state_estimator)/launch/state_estimator_node.launch">
+        <arg name="veh" value="$(arg veh)"/>
+    </include>
+
+</launch>

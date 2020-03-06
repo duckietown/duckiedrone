@@ -5,7 +5,8 @@ from sensor_msgs.msg import Joy
 import numpy as np
 import os
 from geometry_msgs.msg import Pose, Twist
-from pidrone_pkg.msg import Mode, RC
+from duckietown_msgs.msg import DroneMode as Mode
+from duckietown_msgs.msg import DroneControl as RC
 from std_msgs.msg import Float32, Empty, Bool
 
 z_total_steps = 24
