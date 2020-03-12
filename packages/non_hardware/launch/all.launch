@@ -1,5 +1,5 @@
 <launch>
-  <arg name="veh" doc="Name of vehicle. ex megaman"/>
+  <arg name="veh" />
   <arg name="robot_type" default="duckiedrone"  
 		doc="The type of the robot: should be duckiebot, 
 		watchtower, duckiedrone or traffic_light"/>
