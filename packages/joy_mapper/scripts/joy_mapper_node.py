@@ -107,12 +107,12 @@ def joy_callback(data):
 
     def publishTranslateLeft(value):
         if (positionMsg.data == False):
-            poseMsg.position.x = -0.1+value*0.1
+            poseMsg.position.x = -0.1
             poseMsg.position.y = 0.0
             poseMsg.position.z = 0.0
             positionControlPub.publish(poseMsg)
         else:
-            twistMsg.linear.x = -0.1+value*0.1
+            twistMsg.linear.x = -0.1
             twistMsg.linear.y = 0.0
             twistMsg.linear.z = 0.0
             velocityControlPub.publish(twistMsg)
@@ -120,12 +120,12 @@ def joy_callback(data):
 
     def publishTranslateRight(value):
         if (positionMsg.data == False):
-            poseMsg.position.x = 0.1+value*0.1
+            poseMsg.position.x = 0.1
             poseMsg.position.y = 0.0
             poseMsg.position.z = 0.0
             positionControlPub.publish(poseMsg)
         else:
-            twistMsg.linear.x = 0.1+value*0.1
+            twistMsg.linear.x = 0.1
             twistMsg.linear.y = 0.0
             twistMsg.linear.z = 0.0
             twistMsg.angular.z = 0.0
@@ -134,39 +134,39 @@ def joy_callback(data):
     def publishTranslateForward(value):
         if (positionMsg.data == False):
             poseMsg.position.x = 0.0
-            poseMsg.position.y = 0.1+value*0.1
+            poseMsg.position.y = 0.1
             poseMsg.position.z = 0.0
             positionControlPub.publish(poseMsg)
         else:
             twistMsg.linear.x = 0.0
             twistMsg.linear.z = 0.0
-            twistMsg.linear.y = 0.1+value*0.1
+            twistMsg.linear.y = 0.1
             twistMsg.angular.z = 0.0
             velocityControlPub.publish(twistMsg)
 
     def publishTranslateBackward(value):
         if (positionMsg.data == False):
             poseMsg.position.x = 0.0
-            poseMsg.position.y = -0.1+value*0.1
+            poseMsg.position.y = -0.1
             poseMsg.position.z = 0.0
             positionControlPub.publish(poseMsg)
         else:
             twistMsg.linear.x = 0.0
             twistMsg.linear.z = 0.0
-            twistMsg.linear.y = -0.1+value*0.1
+            twistMsg.linear.y = -0.1
             twistMsg.angular.z = 0.0
             velocityControlPub.publish(twistMsg)
 
     def publishTranslateUp(value):
         poseMsg.position.x = 0.0
         poseMsg.position.y = 0.0
-        poseMsg.position.z = 0.05+value*0.05
+        poseMsg.position.z = 0.05
         positionControlPub.publish(poseMsg)
         
     def publishTranslateDown(value):
         poseMsg.position.x = 0.0
         poseMsg.position.y = 0.0
-        poseMsg.position.z = -0.05+value*0.05
+        poseMsg.position.z = -0.05
         positionControlPub.publish(poseMsg)
 
     def publishYawLeft():
@@ -193,10 +193,6 @@ def joy_callback(data):
         velocityControlPub.publish(twistMsg)
     
 
-
-
-
-    print "callback"
 
     #print dir(data)
     #if data.buttons[3] == 1:
@@ -256,7 +252,6 @@ def joy_callback(data):
         print "publishYawRight()"
         publishYawRight()
 
-    print data.axes
     if np.abs(data.axes[0]) >= 0.3:
         print "Axes 0"
 	value = data.axes[0]
