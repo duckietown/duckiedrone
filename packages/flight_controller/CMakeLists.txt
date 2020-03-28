@@ -10,8 +10,6 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
 )
 
-
-
 catkin_package(CATKIN_DEPENDS message_runtime)
 
 catkin_package()
