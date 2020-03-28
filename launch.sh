@@ -22,8 +22,10 @@ set +e
 python2 $CODE_DIR/packages/rangefinder/src/rangefinder_setup.py 
 rangefinder_status=$? #catch the error code
 set -e
-if [ "${DEBUG}" = "1" ];
-then echo rangefinder_setup exit code $rangefinder_status; fi
+if [ "${DEBUG}" = "1" ]
+then 
+	echo rangefinder_setup exit code $rangefinder_status
+fi
 if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 
 
