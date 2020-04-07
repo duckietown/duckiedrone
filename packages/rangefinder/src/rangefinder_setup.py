@@ -2,7 +2,6 @@
 
 import RPi.GPIO as GPIO
 import sys, os
-sys.path.insert(0, "build/lib.linux-armv7l-2.7/")
 import VL53L1X
 import time
 

@@ -73,12 +73,7 @@ def main():
     r = rospy.Rate(100)
     i = 0
     rospy.spin()
-    #print "Four Most Recent Lidar Values"
-    #while not rospy.is_shutdown():
-    #    rangefinder.out_message()
-    #    r.sleep()
-    #    i +=1
-    #    print np.around(rangefinder.ranges, 4), "\t\t\t\r",
+
 
 
 if __name__ == "__main__":

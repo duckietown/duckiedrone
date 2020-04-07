@@ -14,30 +14,30 @@
 
   <group if="$(eval arg('rangefinder') == 'lidar')" ns="$(arg veh)">
 
-	  <node pkg="$(arg pkg_name)" type="lidar_sensor_pub.py" 
-		  name="lidar_sensor_pub1" output="screen">
+	  <node pkg="$(arg pkg_name)" type="lidar_sensor_node.py" 
+		  name="lidar_sensor_node1" output="screen">
 		  <param name="i2c_channel_id" value="0" /></node>
 
-          <node pkg="$(arg pkg_name)" type="lidar_sensor_pub.py" 
-		  name="lidar_sensor_pub2">
+          <node pkg="$(arg pkg_name)" type="lidar_sensor_node.py" 
+		  name="lidar_sensor_node2">
 		  <param name="i2c_channel_id" value="1" /></node>
 
-	  <node pkg="$(arg pkg_name)" type="lidar_sensor_pub.py" 
-		  name="lidar_sensor_pub3">
+	  <node pkg="$(arg pkg_name)" type="lidar_sensor_node.py" 
+		  name="lidar_sensor_node3">
 		  <param name="i2c_channel_id" value="2" /></node>
 
-	  <node pkg="$(arg pkg_name)" type="lidar_sensor_pub.py" 
-		  name="lidar_sensor_pub4">
+	  <node pkg="$(arg pkg_name)" type="lidar_sensor_node.py" 
+		  name="lidar_sensor_node4">
 		  <param name="i2c_channel_id" value="3" /></node>
 
-	  <node pkg="$(arg pkg_name)" type="lidar_smoothing.py" 
-		  name="lidar_smoothing"></node>
+	  <node pkg="$(arg pkg_name)" type="lidar_smoothing_node.py" 
+		  name="lidar_smoothing_node"></node>
   </group>
 
 
   <group if="$(eval arg('rangefinder') == 'infrared')" ns="$(arg veh)">
-	  <node pkg="$(arg pkg_name)" type="infrared_pub.py" 
-		  name="infrared_pub" output="screen"></node>
+	  <node pkg="$(arg pkg_name)" type="infrared_node.py" 
+		  name="infrared_node" output="screen"></node>
   </group>
 
 </launch>
