@@ -329,7 +329,7 @@ def main():
 
 
     # heartbeat subscribers
-    rospy.Subscriber("heartbeat/infrared", Empty, fc.heartbeat_infrared_callback)
+    rospy.Subscriber("heartbeat/altitude", Empty, fc.heartbeat_infrared_callback)
     rospy.Subscriber("heartbeat/web_interface", Empty, fc.heartbeat_web_interface_callback)
     rospy.Subscriber("heartbeat/pid_controller", Empty, fc.heartbeat_pid_controller_callback)
     rospy.Subscriber("state", Odometry, fc.heartbeat_state_estimator_callback)

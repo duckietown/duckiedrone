@@ -81,9 +81,9 @@ def main():
     node_name = os.path.splitext(os.path.basename(__file__))[0]
     rospy.init_node(node_name)
 
-    i2c= rospy.get_param("~i2c_channel_id")
+    i2c_id= rospy.get_param("~i2c_channel_id")
     i2c_base = rospy.get_param("i2c_channel_base")
-    i2c = str(i2c_base)+str(i2c)
+    i2c = str(i2c_base)+str(i2c_id)
     i2c= int(i2c, 16)
     max_range= rospy.get_param("maxrange")
     max_range= float(max_range)
@@ -95,9 +95,9 @@ def main():
 
     # Publishers
     ############
-    ir.range_pub = rospy.Publisher('lidar_sensor', Range, queue_size=1)
-    ir.heartbeat_pub = rospy.Publisher('heartbeat/infrared', Empty, queue_size=1)
-    print 'Publishing IR'
+    ir.range_pub = rospy.Publisher('lidar_sensor_' + str(i2c_id), Range, queue_size=1)
+    ir.heartbeat_pub = rospy.Publisher('heartbeat/lidar_sensor_'+ str(i2c_id), Empty, queue_size=1)
+    print 'Publishing Lidar sensor '+str(i2c_id)
 
     # Non-ROS Setup
     ###############

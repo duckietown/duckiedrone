@@ -4,3 +4,4 @@ vl53l1x
 pyyaml
 numpy
 rpi.gpio
+adafruit-ads1x15

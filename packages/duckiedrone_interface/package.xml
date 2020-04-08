@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>hwonly</name>
+  <name>duckiedrone_interface</name>
   <version>0.0.0</version>
-  <description>The hwonly package</description>
+  <description>The duckiedrone_interface package</description>
 
   <maintainer email="pi@todo.todo">pi</maintainer>
 

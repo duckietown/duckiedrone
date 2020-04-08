@@ -1,22 +1,9 @@
 <?xml version="1.0"?>
 <launch>
 	<arg name="veh" doc="Name of vehicle. ex megaman"/>
-	<arg name="robot_type" default="duckiedrone"  
-		doc="The type of the robot: should be duckiebot, 
-		watchtower, duckiedrone or traffic_light"/>
-
 
 	<arg name="rangefinder" 
 		doc="rangefinder type: lidar or infrared"/>
-	<arg name="maxrange"
-		doc="max range for given sensor type"/>
-	<arg name="i2c1" 
-		doc="i2c channel that sensor has been remapped to"/>
-	<arg name="i2c2"/>
-	<arg name="i2c3"/>
-	<arg name="i2c4"/>
-
-
   <group if="$(eval arg('robot_type') == 'duckiedrone')">
 	  <!-- lidar_sensor_pub nodes take in the i2c address for each sensor -->
 

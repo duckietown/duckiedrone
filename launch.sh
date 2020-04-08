@@ -8,7 +8,6 @@ dt_launchfile_init
 # YOUR CODE BELOW THIS LINE
 # ----------------------------------------------------------------------------
 
-
 # NOTE: Use the variable CODE_DIR to know the absolute path to your code
 # NOTE: Use `dt_exec COMMAND` to run the main process (blocking process)
 
@@ -33,13 +32,11 @@ if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 if [ $rangefinder_status -eq 0 ] 
 then 
 	rangefinderlaunch="lidar"
-	maxrange="3.1"
 fi
 
 if [ $rangefinder_status -eq 10 ]
 then 
 	rangefinderlaunch="infrared"
-	maxrange="0.65"
 fi
 
 
@@ -55,12 +52,10 @@ if [ "${DEBUG}" = "1" ]; then echo "Done!"; fi
 
 
 #launching app
-dt_exec roslaunch hwonly all_drivers.launch \
+dt_exec roslaunch duckiedrone_interface all_drivers.launch \
         veh:=$VEHICLE_NAME \
-        robot_type:=$ROBOT_TYPE \
-        rangefinder:=$rangefinderlaunch \
-	maxrange:=$maxrange \
-
+	robot_type:="duckiedrone" \
+        rangefinder:=$rangefinderlaunch 
 
 # ----------------------------------------------------------------------------
 # YOUR CODE ABOVE THIS LINE
