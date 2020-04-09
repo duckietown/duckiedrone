@@ -7,7 +7,7 @@ import signal
 import time
 from std_msgs.msg import Empty
 from sensor_msgs.msg import Range
-
+import numpy as np
 import RPi.GPIO as GPIO
 import VL53L1X
 
@@ -22,7 +22,7 @@ import VL53L1X
 
 
 
-class IR(object):
+class Lidar(object):
     """A class that reads, analyzes, and publishes IR sensor data.
 
     Publisher:
@@ -38,7 +38,7 @@ class IR(object):
 
     def __init__(self, i2c, max_range):
         self.max_range = max_range
-
+	self.i2c = i2c
         ### development smoother
         GPIO.setmode(GPIO.BCM)
         mode = GPIO.getmode()
@@ -91,12 +91,12 @@ def main():
     #convert i2c channel from hex string to int
 
     # create IR object
-    ir = IR(i2c, max_range)
+    li = Lidar(i2c, max_range)
 
     # Publishers
     ############
-    ir.range_pub = rospy.Publisher('lidar_sensor_' + str(i2c_id), Range, queue_size=1)
-    ir.heartbeat_pub = rospy.Publisher('heartbeat/lidar_sensor_'+ str(i2c_id), Empty, queue_size=1)
+    li.range_pub = rospy.Publisher('lidar_sensor_' + str(i2c_id), Range, queue_size=1)
+    li.heartbeat_pub = rospy.Publisher('heartbeat/lidar_sensor_'+ str(i2c_id), Empty, queue_size=1)
     print 'Publishing Lidar sensor '+str(i2c_id)
 
     # Non-ROS Setup
@@ -104,12 +104,12 @@ def main():
     # set the while loop frequency
     r = rospy.Rate(100)
     # set up the ctrl-c handler
-    signal.signal(signal.SIGINT, ir.ctrl_c_handler)
+    signal.signal(signal.SIGINT, li.ctrl_c_handler)
 
     while not rospy.is_shutdown():
-        ir.heartbeat_pub.publish(Empty())
-        ir.get_range()
-        ir.publish_range(ir.distance)
+        li.heartbeat_pub.publish(Empty())
+        li.get_range()
+        li.publish_range(li.distance)
         r.sleep()
 
 

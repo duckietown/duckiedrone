@@ -19,10 +19,15 @@
 		  output="screen" >
 		  <param name="i2c_channel_id" value="0" /></node>
 
+	  <!-- Due to a hardware issue on the prototype drone
+	   the second node is turned off, this should not be in the final
+	  repo
+	  
           <node pkg="$(arg pkg_name)" type="lidar_sensor_node.py" 
 		  name="lidar_sensor_node_2" required="false"
 		  output="screen" >
-		  <param name="i2c_channel_id" value="1" /></node>
+	 	  <param name="i2c_channel_id" value="1" /></node>
+          -->
 
 	  <node pkg="$(arg pkg_name)" type="lidar_sensor_node.py" 
 		  name="lidar_sensor_node_3" required="false"

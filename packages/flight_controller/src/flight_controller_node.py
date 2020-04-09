@@ -32,11 +32,11 @@ class FlightController(object):
     Subscribers:
     /pidrone/fly_commands
     /pidrone/desired/mode
-    /pidrone/heartbeat/infrared
+    /pidrone/heartbeat/altitude
     /pidrone/heartbeat/web_interface
     /pidrone/heartbeat/pid_controller
     /pidrone/state
-    /pidrone/infrared 
+    /pidrone/altitude 
 
 
     """
@@ -258,9 +258,9 @@ class FlightController(object):
         """Update pid_controller heartbeat"""
         self.heartbeat_pid_controller = rospy.Time.now()
 
-    def heartbeat_infrared_callback(self, msg):
+    def heartbeat_altitude_callback(self, msg):
         """Update ir sensor heartbeat"""
-        self.heartbeat_infrared = rospy.Time.now()
+        self.heartbeat_altitude = rospy.Time.now()
 
     def heartbeat_state_estimator_callback(self, msg):
         """Update state_estimator heartbeat"""
@@ -284,9 +284,9 @@ class FlightController(object):
             print('\nSafety Failure: not receiving flight commands.')
             print('Check the pid_controller node\n')
             disarm = True
-        if curr_time - self.heartbeat_infrared > rospy.Duration.from_sec(1):
+        if curr_time - self.heartbeat_altitude > rospy.Duration.from_sec(1):
             print('\nSafety Failure: not receiving data from the IR sensor.')
-            print('Check the infrared node\n')
+            print('Check the altitude node\n')
             disarm = True
         if curr_time - self.heartbeat_state_estimator > rospy.Duration.from_sec(1):
             print('\nSafety Failure: not receiving a state estimate.')
@@ -305,7 +305,7 @@ def main():
     # create the FlightController object
     fc = FlightController()
     curr_time = rospy.Time.now()
-    fc.heartbeat_infrared = curr_time
+    fc.heartbeat_altitude = curr_time
     fc.heartbeat_web_interface= curr_time
     fc.heartbeat_pid_controller = curr_time
     fc.heartbeat_flight_controller = curr_time
@@ -329,7 +329,7 @@ def main():
 
 
     # heartbeat subscribers
-    rospy.Subscriber("heartbeat/altitude", Empty, fc.heartbeat_infrared_callback)
+    rospy.Subscriber("heartbeat/altitude", Empty, fc.heartbeat_altitude_callback)
     rospy.Subscriber("heartbeat/web_interface", Empty, fc.heartbeat_web_interface_callback)
     rospy.Subscriber("heartbeat/pid_controller", Empty, fc.heartbeat_pid_controller_callback)
     rospy.Subscriber("state", Odometry, fc.heartbeat_state_estimator_callback)

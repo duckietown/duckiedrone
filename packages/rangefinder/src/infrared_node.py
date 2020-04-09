@@ -9,10 +9,10 @@ from sensor_msgs.msg import Range
 
 from datetime import datetime
 
-class IR(object):
+class Infrared(object):
     """A class that reads, analyzes, and publishes IR sensor data.
     Publisher:
-    /pidrone/infrared
+    infrared_sensor
     """
 
     def __init__(self):
@@ -58,13 +58,13 @@ def main():
     rospy.init_node(node_name)
 
     # create IR object
-    ir = IR()
+    ir = Infrared()
 
     # Publishers
     ############
     ir.range_pub = rospy.Publisher('infrared_sensor', Range, queue_size=1)
-    ir.heartbeat_pub = rospy.Publisher('heartbeat/infrared', Empty, queue_size=1)
-    print 'Publishing IR'
+    ir.heartbeat_pub = rospy.Publisher('heartbeat/infrared_sensor', Empty, queue_size=1)
+    print 'Publishing Infrared'
 
     # Non-ROS Setup
     ###############

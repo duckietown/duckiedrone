@@ -32,13 +32,25 @@ class rangefinder_average():
         self.publisher = publisher
         self.max_range = None
         self.min_range = None
-        self.header = None
+        self.header = None #todo cread frame ID for this header
 
         self.range_angle = 0 
         #angle between the direction the range finder is pointed (normal to the drone)
         #and the gravity vector (towards the ground)
 
     def update_angle(self, imu_msg):
+
+        #for more on quaternion see the ros tf page, or there is a great
+        #three blue one brown mini-series on them.
+
+        # however the imu gives a quaternion q and by transfomring the gravity vector
+        # g=[0,0,1,0] in quaternion space, using g' = q dot g dot q_conjugate you get
+        # g' which is the vector going upwards out of the plane of the body of the drone
+        # and using arctan(g dot g') we are able to find the angle that the drone makes
+        # with gravity, and therefore what factor to multiply the rangefinder data to convert
+        # it to distance off the ground.
+
+
         base = np.array([0,0,1,0])
         quat = imu_msg.orientation
         quaternion = np.array([quat.x, quat.y, quat.z, quat.w])
@@ -47,8 +59,7 @@ class rangefinder_average():
         new = tf.transformations.quaternion_multiply(quaternion, \
               tf.transformations.quaternion_multiply(base, quaternion_conjugate))
 
-        
-
+    
         self.range_angle = np.arccos(np.dot(new[0:3], base[0:3]))
 
 
@@ -64,7 +75,6 @@ class rangefinder_average():
 
     def callback(self, range_msg):
         #read in data
-        print np.around(range_msg.range,4), "\t\t\t", np.around(range_msg.range * np.cos(self.range_angle), 4)
         self.ranges[self.range_index] = range_msg.range * np.cos(self.range_angle)
         #project this along the verticle axis TODO: convert this to use frames
         self.increment_index()
@@ -81,14 +91,14 @@ class rangefinder_average():
         msg.header = self.header
         self.publisher.publish(msg)
         self.publisher.heartbeat.publish(Empty())
-	   #print "Last four ranges recived: ", np.around(self.ranges, 4), "\t\t\t\r"
+	#print "Last four ranges recived: ", np.around(self.ranges, 4), "\t\t\t\r"
 
 
 
 
 
 def main():
-    node_name = os.path.splitext(os.path.basename(__file__))[0]
+    node_name = "altitude_node"
     rospy.init_node(node_name)
 
     rangefinder_pub = rospy.Publisher('altitude', Range, queue_size=1)
