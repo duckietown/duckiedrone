@@ -33,21 +33,21 @@ class UKFStateEstimator2D(object):
     state variables in the state vector: z position and z velocity.
     """
     
-    def __init__(self, loop_hz, ir_throttled=False, imu_throttled=False):
+    def __init__(self, loop_hz, altitude_throttled=False, imu_throttled=False):
         # self.ready_to_filter is False until we get initial measurements in
         # order to be able to initialize the filter's state vector x and
         # covariance matrix P.
         self.ready_to_filter = False
         self.printed_filter_start_notice = False
-        self.got_ir = False
+        self.got_altitude = False
         self.loop_hz = loop_hz
         
-        self.ir_topic_str = 'infrared'
+        self.altitude_topic_str = 'altitude'
         self.imu_topic_str = 'imu'
         throttle_suffix = '_throttle'
         
-        if ir_throttled:
-            self.ir_topic_str += throttle_suffix
+        if altitude_throttled:
+            self.altitude_topic_str += throttle_suffix
         if imu_throttled:
             self.imu_topic_str += throttle_suffix
             
@@ -79,7 +79,7 @@ class UKFStateEstimator2D(object):
         # Subscribe to topics to which the drone publishes in order to get raw
         # data from sensors, which we can then filter
         rospy.Subscriber(self.imu_topic_str, Imu, self.imu_data_callback)
-        rospy.Subscriber(self.ir_topic_str, Range, self.ir_data_callback)
+        rospy.Subscriber(self.altitude_topic_str, Range, self.altitude_data_callback)
         
         # Create the publisher to publish state estimates
         self.state_pub = rospy.Publisher('state/ukf_2d', Odometry, queue_size=1,
@@ -214,7 +214,7 @@ class UKFStateEstimator2D(object):
             self.ukf.Q = np.diag([0.01, 1.0])*0.005
         self.in_callback = False
                         
-    def ir_data_callback(self, data):
+    def altitude_data_callback(self, data):
         """
         Handle the receipt of a Range message from the IR sensor.
         """
@@ -234,12 +234,12 @@ class UKFStateEstimator2D(object):
             # measurement error. Variance of the measurement -> variance of
             # the corresponding state variable
             self.ukf.P[0, 0] = self.ukf.R[0]
-            self.got_ir = True
+            self.got_altitude = True
             self.check_if_ready_to_filter()
         self.in_callback = False
             
     def check_if_ready_to_filter(self):
-        self.ready_to_filter = self.got_ir
+        self.ready_to_filter = self.got_altitude
                         
     def publish_current_state(self):
         """
@@ -354,9 +354,9 @@ def main():
     parser = argparse.ArgumentParser(description=('Estimate the drone\'s state '
                                      'with a UKF in one spatial dimension'))
     # Arguments to determine if the throttle command is being used. E.g.:
-    #   rosrun topic_tools throttle messages /pidrone/infrared 40.0
-    parser.add_argument('--ir_throttled', action='store_true',
-            help=('Use throttled infrared topic infrared_throttle'))
+    #   rosrun topic_tools throttle messages /pidrone/altitude 40.0
+    parser.add_argument('--altitude_throttled', action='store_true',
+            help=('Use throttled altitude topic altitude_throttle'))
     parser.add_argument('--imu_throttled', action='store_true',
             help=('Use throttled IMU topic imu_throttle'))
     parser.add_argument('--loop_hz', '-hz', default=30.0,
@@ -368,7 +368,7 @@ def main():
     #       loop can degrade the estimates.
     args = parser.parse_args()
     se = UKFStateEstimator2D(loop_hz=args.loop_hz,
-                             ir_throttled=args.ir_throttled,
+                             altitude_throttled=args.altitude_throttled,
                              imu_throttled=args.imu_throttled)
     try:
         se.start_loop()

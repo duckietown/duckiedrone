@@ -317,11 +317,11 @@ def main():
                               'for visualization or debugging purposes'))
                               
     # Arguments to determine if the throttle command is being used. E.g.:
-    #   rosrun topic_tools throttle messages /pidrone/infrared 40.0
+    #   rosrun topic_tools throttle messages /pidrone/altitude 40.0
     # If one of these is passed in, it will act on all state estimators that can
     # take it in as a command-line argument.
     parser.add_argument('--ir_throttled', action='store_true',
-                        help=('Use throttled infrared topic /pidrone/infrared_throttle'))
+                        help=('Use throttled altitude topic /pidrone/altitude_throttle'))
     parser.add_argument('--imu_throttled', action='store_true',
                         help=('Use throttled IMU topic /pidrone/imu_throttle'))
     parser.add_argument('--optical_flow_throttled', action='store_true',

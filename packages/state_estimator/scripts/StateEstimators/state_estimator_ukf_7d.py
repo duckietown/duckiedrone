@@ -34,26 +34,26 @@ class UKFStateEstimator7D(object):
     #       once it is in a complete enough state and can be placed in a shared
     #       location.
     
-    def __init__(self, loop_hz, ir_throttled=False, imu_throttled=False, optical_flow_throttled=False, camera_pose_throttled=False):
+    def __init__(self, loop_hz, altitude_throttled=False, imu_throttled=False, optical_flow_throttled=False, camera_pose_throttled=False):
         # self.ready_to_filter is False until we get initial measurements in
         # order to be able to initialize the filter's state vector x and
         # covariance matrix P.
         self.ready_to_filter = False
         self.printed_filter_start_notice = False
-        self.got_ir = False
+        self.got_altitude = False
         # self.got_camera_pose = False
         # self.got_optical_flow = False
         self.got_imu = False
         self.loop_hz = loop_hz
         
-        self.ir_topic_str = 'infrared'
+        self.altitude_topic_str = 'altitude'
         self.imu_topic_str = 'imu'
         self.optical_flow_topic_str = 'camera_node/twist'
         self.camera_pose_topic_str = 'camera_node/pose'
         throttle_suffix = '_throttle'
         
-        if ir_throttled:
-            self.ir_topic_str += throttle_suffix
+        if altitude_throttled:
+            self.altitude_topic_str += throttle_suffix
         if imu_throttled:
             self.imu_topic_str += throttle_suffix
         if optical_flow_throttled:
@@ -99,7 +99,7 @@ class UKFStateEstimator7D(object):
         # Subscribe to topics to which the drone publishes in order to get raw
         # data from sensors, which we can then filter
         rospy.Subscriber(self.imu_topic_str, Imu, self.imu_data_callback)
-        rospy.Subscriber(self.ir_topic_str, Range, self.ir_data_callback)
+        rospy.Subscriber(self.altitude_topic_str, Range, self.altitude_data_callback)
         rospy.Subscriber(self.optical_flow_topic_str, TwistStamped,
                          self.optical_flow_data_callback)
         rospy.Subscriber(self.camera_pose_topic_str, PoseStamped,
@@ -170,7 +170,7 @@ class UKFStateEstimator7D(object):
         # Initialize the measurement covariance matrix R
         # IR slant range variance (m^2), determined experimentally in a static
         # setup with mean range around 0.335 m:
-        self.measurement_cov_ir = np.array([2.2221e-05])
+        self.measurement_cov_altitude = np.array([2.2221e-05])
         self.measurement_cov_optical_flow = np.diag([0.01, 0.01])
         # Estimated standard deviation of 5 cm = 0.05 m ->
         # variance of 0.05^2 = 0.0025
@@ -240,7 +240,7 @@ class UKFStateEstimator7D(object):
             self.check_if_ready_to_filter()
         self.in_callback = False
                         
-    def ir_data_callback(self, data):
+    def altitude_data_callback(self, data):
         """
         Handle the receipt of a Range message from the IR sensor.
         """
@@ -259,8 +259,8 @@ class UKFStateEstimator7D(object):
             # Update the state covariance matrix to reflect estimated
             # measurement error. Variance of the measurement -> variance of
             # the corresponding state variable
-            self.ukf.P[2, 2] = self.measurement_cov_ir[0]
-            self.got_ir = True
+            self.ukf.P[2, 2] = self.measurement_cov_altitude[0]
+            self.got_altitude = True
             self.check_if_ready_to_filter()
         self.in_callback = False
         
@@ -334,7 +334,7 @@ class UKFStateEstimator7D(object):
         self.in_callback = False
             
     def check_if_ready_to_filter(self):
-        self.ready_to_filter = (self.got_ir and self.got_imu)
+        self.ready_to_filter = (self.got_altitude and self.got_imu)
                         
     def publish_current_state(self):
         """
@@ -486,9 +486,9 @@ def main():
     parser = argparse.ArgumentParser(description=('Estimate the drone\'s state '
                                      'with a UKF'))
     # Arguments to determine if the throttle command is being used. E.g.:
-    #   rosrun topic_tools throttle messages /pidrone/infrared 40.0
-    parser.add_argument('--ir_throttled', action='store_true',
-            help=('Use throttled infrared topic infrared_throttle'))
+    #   rosrun topic_tools throttle messages /pidrone/altitude 40.0
+    parser.add_argument('--altitude_throttled', action='store_true',
+            help=('Use throttled altitude topic altitude_throttle'))
     parser.add_argument('--imu_throttled', action='store_true',
             help=('Use throttled IMU topic imu_throttle'))
     parser.add_argument('--optical_flow_throttled', action='store_true',
@@ -504,7 +504,7 @@ def main():
     #       loop can degrade the estimates.
     args = parser.parse_args()
     se = UKFStateEstimator7D(loop_hz=args.loop_hz,
-                             ir_throttled=args.ir_throttled,
+                             altitude_throttled=args.altitude_throttled,
                              imu_throttled=args.imu_throttled,
                              optical_flow_throttled=args.optical_flow_throttled,
                              camera_pose_throttled=args.camera_pose_throttled)

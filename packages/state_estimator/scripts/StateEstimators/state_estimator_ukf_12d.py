@@ -33,7 +33,7 @@ class UKFStateEstimator12D(object):
     #       once it is in a complete enough state and can be placed in a shared
     #       location.
     
-    def __init__(self, ir_throttled=False, imu_throttled=False, optical_flow_throttled=False):
+    def __init__(self, altitude_throttled=False, imu_throttled=False, optical_flow_throttled=False):
         # self.ready_to_filter is False until we get initial measurements in
         # order to be able to initialize the filter's state vector x and
         # covariance matrix P.
@@ -42,15 +42,15 @@ class UKFStateEstimator12D(object):
         self.printed_filter_start_notice = False
         self.got_imu = True
         self.got_optical_flow = False
-        self.got_ir = False
+        self.got_altitude = False
         
-        self.ir_topic_str = 'infrared'
+        self.altitude_topic_str = 'altitude'
         self.imu_topic_str = 'imu'
         self.optical_flow_topic_str = 'camera_node/twist'
         throttle_suffix = '_throttle'
         
-        if ir_throttled:
-            self.ir_topic_str += throttle_suffix
+        if altitude_throttled:
+            self.altitude_topic_str += throttle_suffix
         if imu_throttled:
             self.imu_topic_str += throttle_suffix
         if optical_flow_throttled:
@@ -58,7 +58,7 @@ class UKFStateEstimator12D(object):
         
         self.in_callback = False
         
-        self.num_complete_ir = 0
+        self.num_complete_altitude = 0
         self.num_complete_imu = 0
         self.num_complete_optical_flow = 0
         
@@ -91,7 +91,7 @@ class UKFStateEstimator12D(object):
         # rospy.Subscriber(self.imu_topic_str, Imu, self.imu_data_callback)
         rospy.Subscriber(self.optical_flow_topic_str, TwistStamped,
                          self.optical_flow_data_callback)
-        rospy.Subscriber(self.ir_topic_str, Range, self.ir_data_callback)
+        rospy.Subscriber(self.altitude_topic_str, Range, self.altitude_data_callback)
         # TODO: Include position estimates from camera data from
         #       estimateRigidTransform? Occurs in position hold and
         #       localization
@@ -181,7 +181,7 @@ class UKFStateEstimator12D(object):
         
         # IR slant range variance (m^2), determined experimentally in a static
         # setup with mean range around 0.335 m:
-        self.measurement_cov_ir = np.array([2.2221e-05])
+        self.measurement_cov_altitude = np.array([2.2221e-05])
         # TODO: Tune the following variances appropriately. Currently just
         #       guesses
         # Optical flow variances:
@@ -347,7 +347,7 @@ class UKFStateEstimator12D(object):
         #print '--OPTICAL FLOW:', self.num_complete_optical_flow
         self.in_callback = False
                         
-    def ir_data_callback(self, data):
+    def altitude_data_callback(self, data):
         '''
         Handle the receipt of a Range message from the IR sensor.
         
@@ -374,8 +374,8 @@ class UKFStateEstimator12D(object):
             print 'Raw slant range transformed to altitude:', raw_slant_range_as_altitude
             #print 'Raw range:', measurement_z[0]
             self.ukf.update(measurement_z,
-                            hx=self.measurement_function_ir,
-                            R=self.measurement_cov_ir)
+                            hx=self.measurement_function_altitude,
+                            R=self.measurement_cov_altitude)
                             
             # For testing, don't use the unscented transform for residual computation
             # temp_residual = measurement_z - self.ukf.sigmas_h[0]
@@ -399,17 +399,17 @@ class UKFStateEstimator12D(object):
             # Update the state covariance matrix to reflect estimated
             # measurement error. Variance of the measurement -> variance of
             # the corresponding state variable
-            self.ukf.P[2, 2] = self.measurement_cov_ir[0]
-            self.got_ir = True
+            self.ukf.P[2, 2] = self.measurement_cov_altitude[0]
+            self.got_altitude = True
             self.check_if_ready_to_filter()
-        self.num_complete_ir += 1
-        #print '--IR:', self.num_complete_ir
+        self.num_complete_altitude += 1
+        #print '--IR:', self.num_complete_altitude
         #print
         self.in_callback = False
             
     def check_if_ready_to_filter(self):
         self.ready_to_filter = (self.got_imu and self.got_optical_flow and
-                                self.got_ir)
+                                self.got_altitude)
                                 
     def get_quaternion_from_ukf_rpy(self):
         # TODO: Should we use the raw roll, pitch, and yaw values that come in
@@ -611,7 +611,7 @@ class UKFStateEstimator12D(object):
         hx_output = np.dot(H, x)
         return hx_output
         
-    def measurement_function_ir(self, x):
+    def measurement_function_altitude(self, x):
         '''
         For use when the measurement vector z is just the slant range reading
         from the IR sensor
@@ -659,15 +659,15 @@ def main():
     parser = argparse.ArgumentParser(description=('Estimate the drone\'s state '
                                      'with a UKF in three spatial dimensions'))
     # Arguments to determine if the throttle command is being used. E.g.:
-    #   rosrun topic_tools throttle messages /pidrone/infrared 40.0
-    parser.add_argument('--ir_throttled', action='store_true',
-                        help=('Use throttled infrared topic infrared_throttle'))
+    #   rosrun topic_tools throttle messages /pidrone/altitude 40.0
+    parser.add_argument('--altitude_throttled', action='store_true',
+                        help=('Use throttled altitude topic altitude_throttle'))
     parser.add_argument('--imu_throttled', action='store_true',
                         help=('Use throttled IMU topic imu_throttle'))
     parser.add_argument('--optical_flow_throttled', action='store_true',
                         help=('Use throttled optical flow topic picamera/twist_throttle'))
     args = parser.parse_args()
-    se = UKFStateEstimator12D(ir_throttled=args.ir_throttled,
+    se = UKFStateEstimator12D(altitude_throttled=args.altitude_throttled,
                          imu_throttled=args.imu_throttled,
                          optical_flow_throttled=args.optical_flow_throttled)
     try:
