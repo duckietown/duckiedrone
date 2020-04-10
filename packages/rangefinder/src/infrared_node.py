@@ -66,8 +66,8 @@ def main():
 
     # Publishers
     ############
-    ir.range_pub = rospy.Publisher('infrared_sensor', Range, queue_size=1)
-    ir.heartbeat_pub = rospy.Publisher('heartbeat/infrared_sensor', Empty, queue_size=1)
+    ir.range_pub = rospy.Publisher('infrared_sensor_node', Range, queue_size=1)
+    ir.heartbeat_pub = rospy.Publisher('heartbeat/infrared_sensor_node', Empty, queue_size=1)
     print 'Starting Infrared Node'
 
     # Non-ROS Setup

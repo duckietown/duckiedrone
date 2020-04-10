@@ -101,18 +101,18 @@ def main():
     node_name = "altitude_node"
     rospy.init_node(node_name)
 
-    rangefinder_pub = rospy.Publisher('altitude', Range, queue_size=1)
-    rangefinder_pub.heartbeat = rospy.Publisher('heartbeat/altitude', Empty, queue_size=1)
+    rangefinder_pub = rospy.Publisher('altitude_node', Range, queue_size=1)
+    rangefinder_pub.heartbeat = rospy.Publisher('heartbeat/altitude_node', Empty, queue_size=1)
 
     rangefinder = rangefinder_average(rangefinder_pub)
 
 
     rospy.Subscriber('imu', Imu, rangefinder.update_angle)
-    rospy.Subscriber('lidar_sensor_1', Range, rangefinder.callback)
-    rospy.Subscriber('lidar_sensor_2', Range, rangefinder.callback)
-    rospy.Subscriber('lidar_sensor_3', Range, rangefinder.callback)
-    rospy.Subscriber('lidar_sensor_4', Range, rangefinder.callback)
-    rospy.Subscriber('infrared_sensor', Range, rangefinder.callback)
+    rospy.Subscriber('lidar_sensor_node_1', Range, rangefinder.callback)
+    rospy.Subscriber('lidar_sensor_node_2', Range, rangefinder.callback)
+    rospy.Subscriber('lidar_sensor_node_3', Range, rangefinder.callback)
+    rospy.Subscriber('lidar_sensor_node_4', Range, rangefinder.callback)
+    rospy.Subscriber('infrared_sensor_node', Range, rangefinder.callback)
     r = rospy.Rate(100)
     i = 0
     rospy.spin()

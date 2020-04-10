@@ -95,8 +95,8 @@ def main():
 
     # Publishers
     ############
-    li.range_pub = rospy.Publisher('lidar_sensor_' + str(i2c_id), Range, queue_size=1)
-    li.heartbeat_pub = rospy.Publisher('heartbeat/lidar_sensor_'+ str(i2c_id), Empty, queue_size=1)
+    li.range_pub = rospy.Publisher('lidar_sensor_node_' + str(i2c_id), Range, queue_size=1)
+    li.heartbeat_pub = rospy.Publisher('heartbeat/lidar_sensor_node_'+ str(i2c_id), Empty, queue_size=1)
     print 'Starting Lidar sensor '+str(i2c_id)
 
     # Non-ROS Setup
