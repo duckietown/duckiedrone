@@ -44,7 +44,7 @@ class UKFStateEstimator12D(object):
         self.got_optical_flow = False
         self.got_altitude = False
         
-        self.altitude_topic_str = 'altitude'
+        self.altitude_topic_str = 'altitude_node'
         self.imu_topic_str = 'imu'
         self.optical_flow_topic_str = 'camera_node/twist'
         throttle_suffix = '_throttle'

@@ -42,7 +42,7 @@ class UKFStateEstimator2D(object):
         self.got_altitude = False
         self.loop_hz = loop_hz
         
-        self.altitude_topic_str = 'altitude'
+        self.altitude_topic_str = 'altitude_node'
         self.imu_topic_str = 'imu'
         throttle_suffix = '_throttle'
         

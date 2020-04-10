@@ -209,7 +209,7 @@ def main():
     rospy.Subscriber("reset_transform", Empty, state_estimator.reset_callback)
     rospy.Subscriber('camera_node/twist', TwistStamped, state_estimator.twist_callback)
     rospy.Subscriber('camera_node/pose', PoseStamped, state_estimator.pose_callback)
-    rospy.Subscriber('altitude', Range, state_estimator.range_callback)
+    rospy.Subscriber('altitude_node', Range, state_estimator.range_callback)
     rospy.Subscriber('imu', Imu, state_estimator.imu_callback)
 
 

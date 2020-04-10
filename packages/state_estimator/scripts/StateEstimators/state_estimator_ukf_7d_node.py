@@ -46,7 +46,7 @@ class UKFStateEstimator7D(object):
         self.got_imu = False
         self.loop_hz = loop_hz
         
-        self.altitude_topic_str = 'altitude'
+        self.altitude_topic_str = 'altitude_node'
         self.imu_topic_str = 'imu'
         self.optical_flow_topic_str = 'camera_node/twist'
         self.camera_pose_topic_str = 'camera_node/pose'
