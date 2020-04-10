@@ -214,16 +214,15 @@ class FlightController(object):
     def getBoard(self):
         """ Connect to the flight controller board """
         # (if the flight cotroll usb is unplugged and plugged back in,
+
+        board = MultiWii('/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0') 
         #  it becomes .../USB1)
         try:
-            board = MultiWii('/dev/ttyUSB0')
+            board = MultiWii('/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0')
         except SerialException:
-            try:
-                board = MultiWii('/dev/ttyUSB1')
-            except SerialException:
-                print '\nCannot connect to the flight controller board'
-                print 'The USB is unplugged. Please check connection.'
-                sys.exit()
+            print '\nCannot connect to the flight controller board'
+            print 'The USB is unplugged. Please check connection.'
+            sys.exit()
         return board
 
     def send_cmd(self):
