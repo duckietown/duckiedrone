@@ -5,6 +5,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   geometry_msgs
   std_msgs
+  duckietown_msgs
+  sensor_msgs
 )
 
 

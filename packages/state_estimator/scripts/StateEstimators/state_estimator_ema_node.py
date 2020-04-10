@@ -193,7 +193,7 @@ def main():
 
     # Parameters
     ############
-    max_range= rospy.get_param("/maxrange")
+    max_range= rospy.get_param("maxrange")
     max_range= float(max_range)
 
     # Instantiate an EMAStateEstimator object

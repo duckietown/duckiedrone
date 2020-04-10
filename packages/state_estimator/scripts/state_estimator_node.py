@@ -67,11 +67,11 @@ class StateEstimator(object):
             sim_cmd += ' --ir_var '+str(ir_var)
         
         self.process_cmds_dict = {
-                'ema': 'rosrun pidrone_pkg scripts/StateEstimators/state_estimator_ema.py',
-                'ukf2d': '{}state_estimator_ukf_2d.py'.format(program_str),
-                'ukf7d': '{}state_estimator_ukf_7d.py'.format(program_str),
-                'ukf12d': 'rosrun pidrone_pkg scripts/state_estimator_ukf_12d.py',
-                'mocap': 'rosrun pidrone_pkg scripts/state_estimator_mocap.py',  # TODO: Implement this
+                'ema': 'rosrun pidrone_pkg scripts/StateEstimators/state_estimator_ema_node.py',
+                'ukf2d': '{}state_estimator_ukf_2d_node.py'.format(program_str),
+                'ukf7d': '{}state_estimator_ukf_7d_node.py'.format(program_str),
+                'ukf12d': 'rosrun pidrone_pkg scripts/state_estimator_ukf_12d_node.py',
+                'mocap': 'rosrun pidrone_pkg scripts/state_estimator_mocap_node.py',  # TODO: Implement this
                 'simulator': sim_cmd
         }
         
