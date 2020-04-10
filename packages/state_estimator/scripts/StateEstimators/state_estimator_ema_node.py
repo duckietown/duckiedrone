@@ -35,7 +35,7 @@ class EMAStateEstimator(object):
         header.stamp = rospy.Time.now()
         header.frame_id = 'Body'
 
-        self.state_topic_str = 'state/ema'
+        self.state_topic_str = 'state_estimator_node/ema'
 
         self.state = Odometry()
         self.state.header = header

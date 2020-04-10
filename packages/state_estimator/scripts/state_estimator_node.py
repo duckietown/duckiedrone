@@ -84,17 +84,17 @@ class StateEstimator(object):
         # List to store the process objects from subprocess.Popen()
         self.processes = []
 
-        self.ukf_topics = {2: 'state/ukf_2d',
-                           7: 'state/ukf_7d',
-                           12: 'state/ukf_12d'}
-        self.ema_topic = 'state/ema'
+        self.ukf_topics = {2: 'state_estimator_node/ukf_2d',
+                           7: 'state_estimator_node/ukf_7d',
+                           12: 'state_estimator_node/ukf_12d'}
+        self.ema_topic = 'state_estimator_node/ema'
         # NOTE: Currently not supported is running both a simulator and mocap at
         #       the same time for state estimation. There is no apparent need
         #       for such functionality.
-        self.mocap_topic = 'state/ground_truth'
-        self.simulator_topic = 'state/ground_truth'
+        self.mocap_topic = 'state_estimator_node/ground_truth'
+        self.simulator_topic = 'state_estimator_node/ground_truth'
 
-        self.state_pub = rospy.Publisher('state', Odometry, queue_size=1,
+        self.state_pub = rospy.Publisher('state_estimator_node', Odometry, queue_size=1,
                                          tcp_nodelay=False)
 
         self.setup_ukf_with_ground_truth()

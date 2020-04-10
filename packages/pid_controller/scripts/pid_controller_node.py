@@ -362,7 +362,7 @@ def main(ControllerClass):
 
     # Subscribers
     #############
-    rospy.Subscriber('state', Odometry, pid_controller.current_state_callback)
+    rospy.Subscriber('state_estimator_node', Odometry, pid_controller.current_state_callback)
     rospy.Subscriber('desired/pose', Pose, pid_controller.desired_pose_callback)
     rospy.Subscriber('desired/twist', Twist, pid_controller.desired_twist_callback)
     rospy.Subscriber('mode', Mode, pid_controller.current_mode_callback)

@@ -82,7 +82,7 @@ class UKFStateEstimator2D(object):
         rospy.Subscriber(self.altitude_topic_str, Range, self.altitude_data_callback)
         
         # Create the publisher to publish state estimates
-        self.state_pub = rospy.Publisher('state/ukf_2d', Odometry, queue_size=1,
+        self.state_pub = rospy.Publisher('state_estimator_node/ukf_2d', Odometry, queue_size=1,
                                          tcp_nodelay=False)
         
     def initialize_ukf(self):

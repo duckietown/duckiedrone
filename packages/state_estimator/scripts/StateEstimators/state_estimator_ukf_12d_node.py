@@ -97,7 +97,7 @@ class UKFStateEstimator12D(object):
         #       localization
         
         # Create the publisher to publish state estimates
-        self.state_pub = rospy.Publisher('state/ukf_12d', Odometry,
+        self.state_pub = rospy.Publisher('state_estimator_node/ukf_12d', Odometry,
                                          queue_size=1, tcp_nodelay=False)
         
     def initialize_ukf(self):

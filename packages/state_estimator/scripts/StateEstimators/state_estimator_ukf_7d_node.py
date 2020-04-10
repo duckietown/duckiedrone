@@ -93,7 +93,7 @@ class UKFStateEstimator7D(object):
         rospy.init_node(self.node_name)
         
         # Create the publisher to publish state estimates
-        self.state_pub = rospy.Publisher('state/ukf_7d', Odometry, queue_size=1,
+        self.state_pub = rospy.Publisher('state_estimator_node/ukf_7d', Odometry, queue_size=1,
                                          tcp_nodelay=False)
         
         # Subscribe to topics to which the drone publishes in order to get raw
