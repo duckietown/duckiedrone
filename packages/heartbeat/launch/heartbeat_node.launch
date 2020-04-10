@@ -5,7 +5,7 @@
 		watchtower, duckiedrone or traffic_light"/>
 
   <arg name="pkg_name" value="heartbeat" />
-  <arg name="node_name" value="heartbeat_publisher_NEVER_RUN_ON_DRONE" />
+  <arg name="node_name" value="heartbeat_publisher_NEVER_RUN_ON_DRONE_node" />
 
   <group ns="$(arg veh)">
     <node  name="$(arg node_name)" pkg="$(arg pkg_name)" 
