@@ -221,7 +221,7 @@ class FlightController(object):
             try:
                 board = MultiWii('/dev/ttyUSB1')
             except SerialException:
-                print '\nCannot connect to the flight controller board.'
+                print '\nCannot connect to the flight controller board'
                 print 'The USB is unplugged. Please check connection.'
                 sys.exit()
         return board

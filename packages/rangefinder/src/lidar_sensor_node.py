@@ -38,7 +38,7 @@ class Lidar(object):
 
     def __init__(self, i2c, max_range):
         self.max_range = max_range
-	self.i2c = i2c
+        self.i2c = i2c
         ### development smoother
         GPIO.setmode(GPIO.BCM)
         mode = GPIO.getmode()
@@ -97,7 +97,7 @@ def main():
     ############
     li.range_pub = rospy.Publisher('lidar_sensor_' + str(i2c_id), Range, queue_size=1)
     li.heartbeat_pub = rospy.Publisher('heartbeat/lidar_sensor_'+ str(i2c_id), Empty, queue_size=1)
-    print 'Publishing Lidar sensor '+str(i2c_id)
+    print 'Starting Lidar sensor '+str(i2c_id)
 
     # Non-ROS Setup
     ###############

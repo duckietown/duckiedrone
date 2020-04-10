@@ -27,10 +27,14 @@ class Infrared(object):
     def get_range(self):
         """Read the data from the adc and update the distance and
         smoothed_distance values."""
-        voltage = self.adc.read_adc(0, self.GAIN)
+        try:
+            voltage = self.adc.read_adc(0, self.GAIN)
+        except IOError:
+            print "\nFailed to read from infrared sensor, killing IR node.\n"
+            sys.exit()
         if voltage <= 0:
             voltage = 1
-            print "ERROR: BAD VOLTAGE!!!"
+            print "Infrared Node: ERROR: BAD VOLTAGE!!!"
         self.distance = ((1.0 / voltage) * self.m + self.b) / 100.0 # 100 is for cm -> m
 
     def publish_range(self, range):
@@ -64,7 +68,7 @@ def main():
     ############
     ir.range_pub = rospy.Publisher('infrared_sensor', Range, queue_size=1)
     ir.heartbeat_pub = rospy.Publisher('heartbeat/infrared_sensor', Empty, queue_size=1)
-    print 'Publishing Infrared'
+    print 'Starting Infrared Node'
 
     # Non-ROS Setup
     ###############
