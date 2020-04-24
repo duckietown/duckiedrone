@@ -4,15 +4,17 @@ project(state_estimator)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
-  geometry_msgs
   std_msgs
   nav_msgs
+  geometry_msgs
   sensor_msgs
+  duckietown_msgs
   message_generation
 )
 
-add_message_files(
-  FILES
+
+add_message_files(  
+  FILES //todo either remove these or add them to duckietown_msgs
   StateGroundTruth.msg
   UkfStats.msg
 )
