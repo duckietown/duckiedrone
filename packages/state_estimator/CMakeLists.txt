@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 
 add_message_files(  
-  FILES //todo either remove these or add them to duckietown_msgs
+  FILES #todo either remove these or add them to duckietown_msgs
   StateGroundTruth.msg
   UkfStats.msg
 )
@@ -26,6 +26,7 @@ generate_messages(
   nav_msgs
   sensor_msgs
 )
+
 catkin_package(CATKIN_DEPENDS message_runtime)
 
 include_directories(
