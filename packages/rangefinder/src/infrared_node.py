@@ -15,7 +15,7 @@ class Infrared(object):
     infrared_sensor
     """
 
-    def __init__(self):
+    def __init__(self, maxrange):
         self.adc = Adafruit_ADS1x15.ADS1115()
         self.GAIN = 1
         self.distance = 0
@@ -23,6 +23,16 @@ class Infrared(object):
         # distance as a function of voltage : d(v) = 1/v * m + b
         self.m = 181818.18181818182 * 1.238
         self.b = -8.3 + 7.5
+        self.maxrange = maxrange
+        
+        try:
+            voltage = self.adc.read_adc(0, self.GAIN)
+        except IOError:
+            print "\nFailed to read from infrared sensor, killing IR node.\n"
+            sys.exit()
+
+    
+        rospy.set_param("maxrange", str(maxrange))
 
     def get_range(self):
         """Read the data from the adc and update the distance and
@@ -40,7 +50,7 @@ class Infrared(object):
     def publish_range(self, range):
         """Create and publish the Range message to publisher."""
         msg = Range()
-        msg.max_range = 0.8
+        msg.max_range = self.maxrange
         msg.min_range = 0
         msg.range = range
         msg.header.frame_id = "base"
@@ -62,7 +72,8 @@ def main():
     rospy.init_node(node_name)
 
     # create IR object
-    ir = Infrared()
+    maxrange = 0.65
+    ir = Infrared(maxrange)
 
     # Publishers
     ############

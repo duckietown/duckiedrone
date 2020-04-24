@@ -52,6 +52,13 @@ class Lidar(object):
         self.tof.set_timing(budget, inter)
         ### end of setup block
 
+        ### set maxrange param
+        try:
+            rospy.get_param("maxrange")
+        except KeyError:
+            #not set yet
+            rospy.set_param("maxrange", str(max_range))
+
     def get_range(self):
         """need to convert from mm to meters"""
         self.distance = self.tof.get_distance() / 1000.0
@@ -82,11 +89,13 @@ def main():
     rospy.init_node(node_name)
 
     i2c_id= rospy.get_param("~i2c_channel_id")
-    i2c_base = rospy.get_param("i2c_channel_base")
+    i2c_base = "0x3"
     i2c = str(i2c_base)+str(i2c_id)
     i2c= int(i2c, 16)
-    max_range= rospy.get_param("maxrange")
+    max_range= "3.0"
     max_range= float(max_range)
+
+    
 
     #convert i2c channel from hex string to int
 

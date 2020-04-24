@@ -2,14 +2,11 @@
 <launch>
 	<arg name="veh" doc="Name of vehicle. ex megaman"/>
 
-	<arg name="rangefinder" 
-		doc="rangefinder type: lidar or infrared"/>
   <group if="$(eval arg('robot_type') == 'duckiedrone')">
 	  <!-- lidar_sensor_pub nodes take in the i2c address for each sensor -->
 
 	  <include file="$(find rangefinder)/launch/rangefinder.launch">
 		  <arg name="veh" value="$(arg veh)"/>
-		  <arg name="rangefinder" value="$(arg rangefinder)"/>
 	  </include>
 	  
 	  <include file="$(find flight_controller)/launch/flight_controller.launch">

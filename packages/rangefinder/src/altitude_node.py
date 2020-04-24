@@ -78,7 +78,8 @@ class rangefinder_average():
         self.ranges[self.range_index] = range_msg.range * np.cos(self.range_angle)
         #project this along the verticle axis TODO: convert this to use frames
         self.increment_index()
-        self.max_range = range_msg.max_range
+        if self.max_range == None or self.max_range > range_msg.max_range:
+            self.max_range = range_msg.max_range
         self.min_range = range_msg.min_range
         self.header = range_msg.header
         self.out_message()
