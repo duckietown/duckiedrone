@@ -8,15 +8,28 @@
 
 	<arg name="pkg_name" value="rangefinder"/>
 
+
   <group ns="$(arg veh)">
-	  
+
+	  <!--TODO The launch prefix here is a dirty trick to ensure that there
+        is enough time for the setup node to execute before the lidar nodes
+		try to start reading. It will be removed once re-asignment is no longer
+		needed-->
+
+	  <node pkg="$(arg pkg_name)" type="rangefinder_setup_node.py"
+			name="rangefinder_setup_node"
+			required="false"
+			output='screen'></node>
+
+
 
 	  <node pkg="$(arg pkg_name)" type="lidar_sensor_node.py"
 		  name="lidar_sensor_node_1" required="false"
-		  output="screen" >
+		  output="screen"
+		  launch-prefix="bash -c 'sleep 1; $0 $@' ">
 		  <param name="i2c_channel_id" value="0" /></node>
 
-	  <!-- Due to a hardware issue on the prototype drone
+	  <!--TODO Due to a hardware issue on the prototype drone
 	   the second node is turned off, this should not be in the final
 	  repo
 
@@ -37,8 +50,8 @@
 		  <param name="i2c_channel_id" value="3" /></node>
 
 	  <node pkg="$(arg pkg_name)" type="infrared_node.py"
-		  name="infrared_node" output="screen"
-		  required="false"></node>
+	  		name="infrared_node" output="screen"
+	  		required="false"></node>
 
 	  <node pkg="$(arg pkg_name)" type="altitude_node.py"
 		  name="altitude_node"
