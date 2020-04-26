@@ -1,9 +1,9 @@
 #!/bin/bash
 
-source /environment.sh
+#source /environment.sh
 
 # initialize launch file
-dt_launchfile_init
+#dt_launchfile_init
 
 # YOUR CODE BELOW THIS LINE
 # ----------------------------------------------------------------------------
@@ -13,12 +13,12 @@ dt_launchfile_init
 
 
 # launching app
-dt_exec roslaunch non_hardware all.launch veh:=$VEHICLE_NAME \
-	robot_type:=$ROBOT_TYPE
+roslaunch duckiedrone_interface all.launch veh:=$VEHICLE_NAME \
+	robot_type:="duckiedrone" #$ROBOT_TYPE
 #this is where the node that communicates with the web browser is launched
 #dt_exec roslaunch pidrone_pkg rosbridge_websocket.launch
 # ----------------------------------------------------------------------------
 # YOUR CODE ABOVE THIS LINE
 
 # terminate launch file
-dt_launchfile_terminate
+#dt_launchfile_terminate
