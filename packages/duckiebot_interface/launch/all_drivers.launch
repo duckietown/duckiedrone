@@ -1,23 +1,63 @@
 <?xml version="1.0"?>
 <launch>
-	<arg name="veh" doc="Name of vehicle. ex megaman"/>
+    <arg name="veh" doc="Name of vehicle. ex: megaman"/>
+    <arg name="param_file_name" default="default" doc="Specify a param file. ex:default." />
+    <arg name="robot_type" default="duckiebot" doc="The type of the robot: should be duckiebot, watchtower, or traffic_light"/>
+    <arg name="camera_required" value="true" unless="$(eval arg('robot_type') == 'traffic_light')"
+         doc="Do we kill everything if the camera doesn't work?"/>
+    <arg name="camera_required" value="false" if="$(eval arg('robot_type') == 'traffic_light')"
+         doc="Do we kill everything if the camera doesn't work?"/>
 
-    <arg name="param_file_name" default="default" doc="Specify a param file. ex:megaman"/>
-  
-    <include file="$(find joystick)/launch/joystick_node.launch">
+    <!-- Camera Node: reads frames from a physical camera and produces ROS messages -->
+    <include file="$(find camera_driver)/launch/camera_node.launch">
         <arg name="veh" value="$(arg veh)"/>
-        <arg name="param_file_name" value="$(arg param_file_name)"/>
+        <arg name="param_file_name" value="$(arg robot_type)"/>
+        <arg name="required" value="$(arg camera_required)"/>
     </include>
 
-  <group if="$(eval arg('robot_type') == 'duckiedrone')">
-	  <include file="$(find rangefinder)/launch/rangefinder.launch">
-		  <arg name="veh" value="$(arg veh)"/>
-	  </include>
-	  
-	  <include file="$(find flight_controller)/launch/flight_controller.launch">
-		  <arg name="veh" value="$(arg veh)"/>
-		  <arg name="robot_type" value="$(arg robot_type)"/>
-          </include>
-  </group>
+    <!-- LED Emitter: reads ROS messages and commands the LEDs -->
+    <group unless="$(eval arg('robot_type') == 'watchtower')">
+        <include file="$(find led_emitter)/launch/led_emitter_node.launch">
+            <arg name="veh" value="$(arg veh)"/>
+            <arg name="robot_type" value="$(arg robot_type)"/>
+        </include>
+    </group>
+
+
+    <!-- Joystick: reads from a physical joystick and produces ROS messages -->
+    <group if="$(eval arg('robot_type') == 'duckiebot')">
+        <include file="$(find joystick)/launch/joystick_node.launch">
+            <arg name="veh" value="$(arg veh)"/>
+            <arg name="param_file_name" value="$(arg param_file_name)"/>
+        </include>
+
+        <!-- Wheel Drivers: reads ROS messages and spins the motors -->
+        <include file="$(find wheels_driver)/launch/wheels_driver_node.launch">
+            <arg name="veh" value="$(arg veh)"/>
+            <arg name="param_file_name" value="$(arg param_file_name)"/>
+        </include>
+
+   </group>
+
+    <!-- Traffic Light (Traffic Light robot only): commands the LEDs of a traffic light -->
+    <group if="$(eval arg('robot_type') == 'traffic_light')">
+        <remap from="led_emitter_node/custom_pattern" to="~custom_pattern"/>
+        <include file="$(find traffic_light)/launch/traffic_light_node.launch">
+            <arg name="veh" value="$(arg veh)"/>
+        </include>
+    </group>
+
+
+	<group if="$(eval arg('robot_type') == 'duckiedrone')">
+  	  <include file="$(find rangefinder)/launch/rangefinder.launch">
+  		  <arg name="veh" value="$(arg veh)"/>
+  	  </include>
+
+  	  <include file="$(find flight_controller)/launch/flight_controller.launch">
+  		  <arg name="veh" value="$(arg veh)"/>
+  		  <arg name="robot_type" value="$(arg robot_type)"/>
+            </include>
+    </group>
+
 
 </launch>

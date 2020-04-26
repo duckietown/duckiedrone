@@ -1,15 +1,20 @@
 <?xml version="1.0"?>
 <package>
   <name>duckiebot_interface</name>
-  <version>0.0.0</version>
-  <description>The duckiebot_interface package</description>
+  <version>1.0.0</version>
+  <description>The duckiebot_interface meta package</description>
 
-  <maintainer email="pi@todo.todo">pi</maintainer>
+  <license>GPLv3</license>
+<maintainer email="mack@duckietown.org">Mack</maintainer>
 
-  <license>TODO</license>
-
-  <run_depend>message_runtime</run_depend>
   <buildtool_depend>catkin</buildtool_depend>
+
   <build_depend>rospy</build_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>duckietown_msgs</run_depend>
+  
+  <run_depend>duckietown_msgs</run_depend>
   <run_depend>rospy</run_depend>
-  </package>
+
+
+</package>

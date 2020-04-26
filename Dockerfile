@@ -45,7 +45,7 @@ ENV LAUNCHFILE "${REPO_PATH}/launch.sh"
 CMD ["bash", "-c", "${LAUNCHFILE}"]
 
 # store module name
-LABEL org.duckietown.label.module.type="${REPO_NAME}"
+LABEL org.duckietown.label.module.type "${REPO_NAME}"
 ENV DT_MODULE_TYPE "${REPO_NAME}"
 
 # store module metadata

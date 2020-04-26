@@ -6,6 +6,7 @@ project(duckiebot_interface)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   rospy
+  duckietown_msgs
 )
 
 catkin_package(CATKIN_DEPENDS message_runtime)
@@ -15,6 +16,3 @@ catkin_package()
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
-
-
-

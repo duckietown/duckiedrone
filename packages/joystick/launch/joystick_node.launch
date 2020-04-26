@@ -9,7 +9,7 @@
 	<node pkg="joy" type="$(arg node_name)" name="$(arg node_name)" output="screen">
 		<rosparam command="load" file="$(find joystick)/config/$(arg node_name)/$(arg param_file_name).yaml"/>
 	</node>
-    
+
     </group>
 
 </launch>

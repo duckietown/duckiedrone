@@ -1,2 +1,4 @@
 # LIST YOUR APT PACKAGES HERE
 python-serial
+ros-kinetic-tf-conversions
+ros-kinetic-joy
