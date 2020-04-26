@@ -1,1 +1,7 @@
 # LIST YOUR PYTHON PACKAGES HERE
+smbus2
+vl53l1x
+pyyaml
+numpy
+rpi.gpio
+adafruit-ads1x15
