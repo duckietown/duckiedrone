@@ -1,8 +1,11 @@
 <?xml version="1.0"?>
 <package>
   <name>joy_mapper</name>
+  <version>0.0.0</version>
   <description>The joy_mapper package</description>
-
+  <maintainer email="pi@todo.todo">pi</maintainer>
+  
+  <license>TODO</license>
  
   <run_depend>message_runtime</run_depend>
   <buildtool_depend>catkin</buildtool_depend>

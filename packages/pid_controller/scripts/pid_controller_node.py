@@ -348,7 +348,7 @@ def main(ControllerClass):
 
     # Parameters:
     #############
-    max_range= rospy.get_param("/duckiedrone/maxrange")
+    max_range= rospy.get_param("maxrange")
     max_range= float(max_range)
 
     # create the PIDController object

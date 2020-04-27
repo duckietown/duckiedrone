@@ -14,7 +14,7 @@
 
 # launching app
 roslaunch duckiedrone_interface all.launch veh:=$VEHICLE_NAME \
-	robot_type:="duckiedrone" #$ROBOT_TYPE
+	robot_type:=$ROBOT_TYPE
 #this is where the node that communicates with the web browser is launched
 #dt_exec roslaunch pidrone_pkg rosbridge_websocket.launch
 # ----------------------------------------------------------------------------
